@@ -4,46 +4,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>크래프톤 정글 | 로그인페이지</title>
+    <title>Register</title>
     <style>
-        .mytitle {
-            color: white;
-            width: 300px;
-            height: 200px;
-            background-image: url('https://www.ancient-origins.net/sites/default/files/field/image/Agesilaus-II-cover.jpg');
-            background-position: center;
-            background-size: cover;
-
-            border-radius: 10px;
-            text-align: center;
-            padding-top: 40px;
-        }
-
-        .wrap {
-            margin: 10px auto;
-            width: 300px;
+        div {
+            padding: 10px;
         }
     </style>
 </head>
 
 <body>
-    <div class="wrap">
-        <div>
-            <p>
-                ID: <input type="text" />
-            </p>
 
-            <p>
-                PW: <input type="password" />
-            </p>
-
-            <p>
-                PW CHECK: <input type="password" />
-            </p>
-        </div>
-        <button>확인</button>
+    <div>
+        <label> 아이디 : <input id = "id" type = "text"></label>
     </div>
-</body>
+
+    <div>
+        <label> 비번 : <input id = "pw" type = "text"></label>
+    </div>
+
+    <div>
+        <label> 비번재 : <input id = "r_pw" type = "text"></label>
+    </div>
+
+    <div>
+        <input type="button" value="뒤로가기" onclick="back()">
+        <input type="button" value="로그인" onclick="create_id()">
+    </div>
+    
 </body>
 
 </html>
