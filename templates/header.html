@@ -1,0 +1,28 @@
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+    .nav-div{
+        display: block;
+    }
+    .nav{ position: relative;  display: flex;}
+</style>
+<script>
+    tailwind.config = {
+        theme: {
+            extend: {
+                colors: {
+                    myCustomColor: '#ffd600',
+                }
+            }
+        }
+    }
+</script>
+
+<div class="nav-div">
+    <ul class="nav bg-myCustomColor">
+      <li>도서 목록</li>
+      <li>도서 등록</li>
+      <li>MyPage</li>
+    </ul>
+</div>

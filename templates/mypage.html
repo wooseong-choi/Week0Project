@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  {% include 'header.html' %}
+  <title>Document</title>
+</head>
+<script>
+  {% if error %}
+    alert('회원정보가 없습니다.');
+  {% endif %}
+
+
+
+</script>
+<body>
+
+  <div class="w-full flex">
+    <div class="w-1/2">
+      <ul>
+        {% for item in book %}
+        <li><span onclick="openPop('{{ item['_id'] }}')">{{ item['book_name'] }}</span></li>
+        {% endfor %}
+      </ul>
+    </div>
+    <div class="w-1/2">
+      <ul>
+        {% for item in rental %}
+        <li><span onclick="openPop('{{ item['_id'] }}')">{{ item['book_name'] }}</span></li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+
+
+</body>
+</html>
