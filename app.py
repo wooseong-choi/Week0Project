@@ -1,7 +1,7 @@
 
 from flask import Flask, render_template, jsonify, request, session
 from pymongo import MongoClient
-from bson.objectid import ObjectId
+from bson import ObjectId
 from flask.json.provider import JSONProvider
 
 app = Flask(__name__)
@@ -27,8 +27,13 @@ def mypage(userId):
 
    if len(users) > 0 :
 
-      rental = list( db.rental.find({'user_id': userId} ) )
       book = list( db.books.find({'user_id': userId} ) )
+
+      rental = []
+
+      for tempBook in book :
+         rental = list( db.rental.find({'book_row_id': str(tempBook['_id']) } ) )
+         
 
       print('rental : ' , rental)
       print('book : ' , book)
@@ -43,6 +48,19 @@ def mypage(userId):
    #db.rental.insert_one({'rental_place':'교육관 1층','rental_period':'대여 기간','rental_time':'약속 시간','user_row_id':'test', 'book_row_id':'testbook'})
 
 
+@app.route('/mypage/<userId>/rental', methods=['POST'])
+def mypageRental(userId):
+   id = request.form['objId']
+
+   books = list( db.books.find({'_id': ObjectId(id)} ) )
+
+   for i in books :
+      i['_id'] = str(i['_id'])
+
+
+
+   return jsonify({'result': books})
+  
 
 if __name__ == '__main__':  
 
