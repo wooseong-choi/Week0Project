@@ -1,10 +1,12 @@
+
 from flask import Flask, render_template, jsonify, request, session
+from pymongo import MongoClient
+from bson.objectid import ObjectId
 from flask.json.provider import JSONProvider
 
 app = Flask(__name__)
 
-from bson.objectid import ObjectId
-from pymongo import MongoClient
+
 client = MongoClient('localhost', 27017)
 db = client.week0Project
 
@@ -43,6 +45,5 @@ def mypage(userId):
 
 
 if __name__ == '__main__':  
-   app.run('0.0.0.0',port=5000,debug=True)
 
-
+   app.run('0.0.0.0', port=5001, debug=True)
