@@ -24,6 +24,25 @@ def home():
    #db.rental.insert_one({'rental_place':'교육관 1층','rental_period':'대여 기간','rental_time':'약속 시간','user_row_id':'test', 'book_row_id':'testbook'})
    return render_template('index.html')
 
+@app.route('/books/list', methods=['GET'])
+def show_books():
+   all_books = list(db.book.find({},{"_id" : False}).sort("like", -1))
+   # 2. 성공하면 success 메시지와 함께 all_books 목록을 클라이언트에 전달합니다.
+   return render_template('load.html')
+# jsonify({"result" : "success", "all_books" : all_books})
+
+@app.route('/books/upload', methods=['POST'])
+def upload_books():
+    title_receive = request.form['title_give']
+    text_receive = request.form['text_give']
+    memo_list = list(db.cards.find({}, {'_id': 0}))
+    count = len(memo_list) + 1
+
+    book = {'title': title_receive, 'text': text_receive, 'num': count}
+
+    db.book.insert_one(book)
+    
+    return jsonify({'result': 'success'})
 
 @app.route('/mypage/<userId>', methods=['GET'])
 def mypage(userId):
@@ -46,13 +65,7 @@ def mypage(userId):
 
       return render_template('mypage.html', name=userId, book=book,rental=rental)
    else  :
-      return render_template('mypage.html', error='No user')
-   
-
-   #db.users.insert_one({'id':'ghkdgo868','password':'dddd','name':'최우성'})
-   #db.books.insert_one({'book_name':'신비한 동물사전','book_comment':'이 책은 대단합니다.','book_image':'test.jpg','user_row_id':'test'})
-   #db.rental.insert_one({'rental_place':'교육관 1층','rental_period':'대여 기간','rental_time':'약속 시간','user_row_id':'test', 'book_row_id':'testbook'})
-
+      return render_template('mypage.html', error='No user')   
 
 @app.route('/mypage/<userId>/rental', methods=['POST'])
 def mypageRental(userId):
