@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+
+  <script>
+    function postBooks() {
+    let title = $("#input-title").val()
+    let text = $("#input-text").val()
+    let image = $("#input-image").val() 
+
+    $.ajax({
+      type: "POST",
+      url: "/books",
+      data: { 'title_give': title, 'text_give': text, 'image_give': image },
+      success: function (response) { // 성공하면
+        if (response['result'] == 'success') {
+          alert("책 등록 완료!");
+          showBooks();
+        } else {
+          alert("서버 오류!")
+        }
+      }
+    })
+  }
+  </script>
+</head>
+<body>
+<div class=wrap>
+  <form>
+    <div>
+      <input type="file" id="input-image" class="real-upload" accept="image/*">
+    </div>
+    <div>
+      <input name="title" id="input-title" placeholder="책의 제목을 입력하세요"></input>
+    </div>
+    <div>
+      <textarea name="text" id="input-text" rows="4" placeholder="책의 내용을 간단히 입력하세요"></textarea>
+    </div>
+    <div>
+      <button id="save-alert" type="submit" class="btn btn-primary" onclick="postBooks()">등록하기</button>
+    </div>
+  </form>
+</div>
+
+
+</body>
+</html>
