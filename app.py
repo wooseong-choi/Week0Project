@@ -32,11 +32,12 @@ def mypage(userId):
       rental = []
 
       for tempBook in book :
-         rental = list( db.rental.find({'book_row_id': str(tempBook['_id']) } ) )
-         
+         tempRental = list( db.rental.find( {'book_row_id': str(tempBook['_id']) ,'rental_status':'대여 요청' } ) )
+         rental.append(tempRental)
+      
 
-      print('rental : ' , rental)
-      print('book : ' , book)
+      #print('rental : ' , rental)
+      #print('book : ' , book)
 
       return render_template('mypage.html', name=userId, book=book,rental=rental)
    else  :
@@ -52,6 +53,24 @@ def mypage(userId):
 def mypageRental(userId):
    id = request.form['objId']
 
+   rental = list( db.rental.find({'_id': ObjectId(id)} ) )
+
+   for i in rental :
+      i['_id'] = str(i['_id'])
+
+
+   book = list( db.books.find({'_id':ObjectId(rental[0]['book_row_id'])}) ) 
+
+   for i in book :
+      i['_id'] = str(i['_id'])
+
+
+   return jsonify({'result': book, 'rental':rental})
+
+@app.route('/mypage/<userId>/bookEdit', methods=['POST'])
+def bookEdit(userId):
+   id = request.form['objId']
+
    books = list( db.books.find({'_id': ObjectId(id)} ) )
 
    for i in books :
@@ -59,8 +78,25 @@ def mypageRental(userId):
 
 
 
-   return jsonify({'result': books})
-  
+   return jsonify({'result': books}) 
+
+@app.route('/mypage/<userId>/join', methods=['POST'])
+def join(userId):
+   id = request.form['objId']
+
+   result = db.rental.update_one( {'_id':ObjectId(id)}, {'$set': {'rental_status':'수락'} } )
+
+
+   if result.deleted_count == 1:
+      return jsonify({'result': 'success'})
+   else:
+      return jsonify({'result': 'failure'})    
+
+
+
+
+
+
 
 if __name__ == '__main__':  
 
