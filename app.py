@@ -100,9 +100,11 @@ def mypage():
          tempRental = list( db.rental.find( {'book_row_id': str(tempBook['_id'])  } ) )
          rental.append(tempRental)
       
-      print(rental)
 
-      return render_template('mypage.html', name=userId, book=book,rental=rental)
+      rental_request = list( db.rental.find( { 'take_user_id': userId } ) )
+
+
+      return render_template('mypage.html', name=userId, book=book,rental=rental, rental_request=rental_request)
    else  :
       return render_template('mypage.html', error='No user')   
 
@@ -183,7 +185,7 @@ def delBook():
       return jsonify({'result': 'failure'})   
 
 
-@app.route( '/mypage/reqBookRental' , method=['POST'] )
+@app.route( '/mypage/reqBookRental' , methods=['POST'] )
 def reqBookRental():
    if session['logged_in'] == False : 
       return render_template('mypage.html', error='No session')   
@@ -209,7 +211,9 @@ def reqBookRental():
             'book_name': book['title'],
             'take_user_id': reqUserId,
             'user_id': book['user_id'],
-            'rental_status': '대여 신청'
+            'book_image': book['image'],
+            'rental_status': '대여 신청',
+            'notification':True
          }
 
    try:
@@ -219,6 +223,11 @@ def reqBookRental():
       return jsonify({'result': 'failure'})    
 
 
+@app.route('/mypage/updateNotification', methods=['POST'])
+def updateNotification():
+   rentalId = request.form['objId']
+   db.rental.update_one({'_id':ObjectId(rentalId)}, {'$set': {'notification':False} } )
+   return jsonify({'result': 'success'})
 
 #'Logged' #session.clear()
 #로그아웃
