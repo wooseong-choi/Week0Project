@@ -25,9 +25,22 @@
                 text-decoration: underline;
             }
 
-            .card {
-                margin-bottom: 15px;
+            #book-box {
+                width: 800px;
             }
+            .card {
+                /* margin-bottom: 35px; */
+                width: 25rem;
+                display: inline-block;
+                
+                margin: 10px 10px 10px 10px;
+            }
+
+            .sorter-box {
+                width: 500px;
+            }
+
+            
         </style>
         <script>
             $(document).ready(function () {
@@ -103,8 +116,32 @@
                 </div>
             </div>
         </section>
-        <div class="book-list" id="book-box">
-            
+        <div class="book-column" id="book-box">
+            {% for item in all_books %}
+            <div class = "card">
+                <div class="card-image">
+                  <figure class="image is-4by4">
+                    <img src="../static/{{ item['image'] }}" class="card-img-top" style="max-height: 300px">
+                  </figure>
+                </div>
+                <div class="card-content">
+                    <div class="title">
+                        <p class="title is-5">{{ item['title'] }}</p>
+                    </div>
+                    <div class="content">
+                        {{ item['text'] }}
+                    </div>
+                    <div class="date">
+                        <time datetime="2016-1-1">등록일: 11:09 PM - 1 Jan 2016</time>
+                    </div>
+                </div>
+                <footer class="card-footer">
+                    <a href="#" class="card-footer-item">대여하기</a>    
+                </footer>
+            </div>
+            {% endfor %}
         </div>
+
+        
     </body>
 </html>

@@ -44,7 +44,8 @@ def home():
 @app.route('/books/list', methods=['GET'])
 def show_books():
     all_books = list(db.book.find({}, {'_id': False}))
-    return jsonify({'result': 'success', 'all_books': all_books})
+    print(all_books)
+    return render_template('list.html', all_books=all_books)
 
 @app.route('/books/upload', methods=['GET'])
 def goUpload():
