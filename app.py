@@ -11,8 +11,6 @@ from bson import ObjectId
 
 from flask.json.provider import JSONProvider
 
-from push_notifications import send_push_notification
-
 app = Flask(__name__)
 
 client = MongoClient('localhost', 27017)  # mongoDB는 27017 포트로 돌아갑니다.
@@ -31,18 +29,9 @@ def show_books():
     all_books = list(db.book.find({}, {'_id': False}))
     return jsonify({'result': 'success', 'all_books': all_books})
 
-@app.route('/books/upload', methods=['POST'])
-def upload_books():
-    title_receive = request.form['title_give']
-    text_receive = request.form['text_give']
-    memo_list = list(db.cards.find({}, {'_id': 0}))
-    count = len(memo_list) + 1
-
-    book = {'title': title_receive, 'text': text_receive, 'num': count}
-
-    db.book.insert_one(book)
-    
-    return jsonify({'result': 'success'})
+@app.route('/books/upload', methods=['GET'])
+def goUpload():
+   return render_template('upload.html')
 
 @app.route('/books/upload', methods=['POST'])
 def posting():
