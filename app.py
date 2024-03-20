@@ -34,17 +34,16 @@ def home():
    if not session.get('logged_in'):
       return render_template('login.html')
    else:
-      return render_template('index.html')
+      return render_template('list.html')
    
    # db.users.insert_one({'id':'asd','password':'123','name':'asd'})
    # db.books.insert_one({'book_name':'asd','book_comment':'asd','book_image':'asd','user_row_id':'asd'})
    # db.rental.insert_one({'rental_place':'교육관 1층','rental_period':'대여 기간','rental_time':'약속 시간','user_row_id':'test', 'book_row_id':'testbook'})
 
-
 @app.route('/books/list', methods=['GET'])
 def show_books():
     all_books = list(db.book.find({}, {'_id': False}))
-    return jsonify({'result': 'success', 'all_books': all_books})
+    return render_template('list.html',all_books=all_books)
 
 @app.route('/books/upload', methods=['GET'])
 def goUpload():
@@ -55,6 +54,9 @@ def upload():
     title_receive = request.form["title_give"]
     text_receive = request.form["text_give"]
     image = request.files["image_give"]
+
+    userId = session['user_id']
+
     # static 폴더에 저장될 파일 이름 생성하기 
     today = datetime.now()
     mytime = today.strftime('%Y-%m-%d-%H-%M-%S')
@@ -64,19 +66,19 @@ def upload():
     # static 폴더에 저장
     save_to = f'static/{filename}.{extension}'
     image.save(save_to)
-
+    
     # DB에 저장
     doc = {
         'title': title_receive,
         'text': text_receive,
-        'image': f'{filename}.{extension}'
+        'image': f'{filename}.{extension}',
+        'user_id':userId
     }
     db.book.insert_one(doc)
 
     return jsonify({'msg': '업로드 완료!'})
 
 @app.route('/mypage', methods=['GET'])
-
 def mypage():
    
    
@@ -90,7 +92,7 @@ def mypage():
 
    if len(users) > 0 :
 
-      book = list( db.books.find({'user_id': userId} ) )
+      book = list( db.book.find({'user_id': userId} ) )
 
       rental = []
 
@@ -161,43 +163,12 @@ def reject(userId):
 
 
 #'Logged' #session.clear()
-    
-
-# 토큰이 있는지 확인하고 인증을 처리하는 데코레이터
-def token_required(func):
-    @wraps(func)
-    def decorated(*args, **kwargs):
-        token = request.args.get('token')
-        if not token:
-            return jsonify({'error' : 'Token is missing!'}), 401
-        try:
-            payload = jwt.decode(token, app.config['SECRET_KEY'])
-        except jwt.ExpiredSignatureError:
-            return jsonify({'error' : 'Token is expired!'}), 401
-        except jwt.InvalidTokenError:
-            return jsonify({'error' : 'Invalid Token!'}), 401
-        return func(*args, **kwargs)
-    return decorated
-
-
-
-
-
-# 공개 페이지
-@app.route('/public')
-def public():
-    return 'For Public'
-
-# 인증된 페이지
-@app.route('/auth')
-def auth():
-    return 'JWT is verified. Welcome dashboard'
-
 #로그아웃
 #@app.route('/', methods=['POST'])
 @app.route('/logout', methods=['POST'])
 def logout():
     session['logged_in'] = False
+    session.pop('user_id',None)
     return render_template('login.html') #session.clear(), 
 
 
