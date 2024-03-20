@@ -28,10 +28,19 @@
             margin: 10px;
             text-align: center;
         }
+<<<<<<< HEAD
         ::placeholder {
     text-align: center;
 }
 
+=======
+        .container {
+        
+            margin: auto;
+            width: 350px;
+        }
+        
+>>>>>>> 21dde16 (로그인 페이지 ui 개선)
     </style>
 </head>
 <script>
@@ -73,7 +82,7 @@
 </script>
 <body>
 
-    <div class="oustset" style="text-align: center;">
+    <!-- <div class="oustset">
         <form action="/login" method="POST">
             <input type="user_id"  required name="user_id" placeholder="user_id"> <br><br>
             <input type="password" required name="password" placeholder="Password"> <br><br>
@@ -87,7 +96,45 @@
             <input type="submit" value="Register">
         </form>
     
-    </div>
+    </div> -->
+          
 
+    <div class ="container">
+    <div class ="oustset">
+    <form action="/login" method="POST">
+    <div class="field">
+        <p class="control has-icons-left has-icons-right">
+          <input class="input" type="user_id" required name="user_id" placeholder="ID">
+          <span class="icon is-small is-left">
+            <i class="far fa-user-circle"></i>
+        </p>
+    </div>
+    <div class="field">
+        <p class="control has-icons-left">
+          <input class="input" type="password" required name="password" placeholder="Password">
+          <span class="icon is-small is-left">
+            <i class="fas fa-lock"></i>
+          </span>
+        </p>
+    </div>
+    </form> <br>
+    <form action="/login" method="POST">
+    <div class="field">
+        <p class="control">
+          <button class="button is-success" required onclick="log_in();" value="Login">
+            <span class="icon">
+                <i class="fas fa-sign-in-alt"></i>
+              </span>
+              <span>Login</span>
+          </button>
+        </p>
+    </div>
+    </form>
+    <form action="/register" method="POST">
+        <input type="submit" value="Register" class="container has text-right">
+    </form>
+    </div>
+</div>
 </body>
 </html>
+
