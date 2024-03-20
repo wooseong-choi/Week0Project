@@ -160,6 +160,44 @@
                 
             }
 
+            function reqRental( objId ){
+                var rental_place = $('[name=place]').val();
+                var rental_time = $('[name=time]').val();
+                var rental_period = $('[name=period]').val();
+
+                if ( rental_place == null || rental_place == undefined || rental_place == '' || rental_place.length == 0 ) {
+                    $('[name=place]').focus();
+                    return alert('대여 장소를 입력해주세요.');
+                }
+                if ( rental_time == null || rental_time == undefined || rental_time == '' || rental_time.length == 0 ) {
+                    $('[name=time]').focus();
+                    return alert('대여 시간을 입력해주세요.');
+                }
+                if ( rental_period == null || rental_period == undefined || rental_period == '' || rental_period.length == 0 ) {
+                    $('[name=period]').focus();
+                    return alert('대여 기간을 입력해주세요.');
+                }
+
+                $.ajax({
+                    type:'POST',
+                    url:'/mypage/reqBookRental',
+                    data:{
+                        'objId':objId,
+                        'rental_place':rental_place,
+                        'rental_period':rental_period,
+                        'rental_time':rental_time,
+                        'book_name':$('[name=title]').val()
+                    },
+                    success: function(response){
+                        console.log(response);
+                        var result = response.result[0];
+                    }
+                });
+
+
+            }
+
+
         </script>
     </head>
     <body>
@@ -228,7 +266,7 @@
                     </div>
                     <div class="w-4/12 mt-0 items-center pr-5" style="margin-top: 0!important; ">
                     <!-- <button class="mt-1 inline-flex items-center px-4 py-2 font-semibold leading-6 text-sm shadow rounded-md text-white bg-indigo-500">채팅하기</button><br> -->
-                    <button id="reqRentalBtn" class="w-full mt-1 inline-flex items-center px-4 py-2 font-semibold h-full text-sm shadow rounded-md text-white bg-indigo-500" onclick="reqRental()">대여신청</button><br>
+                    <button id="reqRentalBtn" class="w-full mt-1 items-center px-4 py-2 font-semibold h-full text-sm shadow rounded-md text-white bg-indigo-500" onclick="reqRental()">대여신청</button><br>
                     </div>
                 </div>
             </div>
