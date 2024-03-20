@@ -39,7 +39,7 @@ def goUpload():
    return render_template('upload.html')
 
 @app.route('/books/upload', methods=['POST'])
-def posting():
+def upload():
     title_receive = request.form["title_give"]
     text_receive = request.form["text_give"]
     image = request.files["image_give"]
