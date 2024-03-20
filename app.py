@@ -14,7 +14,14 @@ from functools import wraps
 
 import hashlib
 
+
+
+from flask import flash
+
+
 app = Flask(__name__)
+
+app.config['SECRET_KEY'] = 'f1fb0b3154444c53b7aa815e013f7f4f'
 
 client = MongoClient('localhost', 27017)  # mongoDB는 27017 포트로 돌아갑니다.
 db = client.week0Project                        # 'jungle'라는 이름의 db를 만듭니다.
@@ -62,7 +69,7 @@ def goUpload():
    return render_template('upload.html')
 
 @app.route('/books/upload', methods=['POST'])
-def posting():
+def upload():
     title_receive = request.form["title_give"]
     text_receive = request.form["text_give"]
     image = request.files["image_give"]
@@ -209,12 +216,17 @@ def login():
     username_receive = request.form['username']
     password_receive = request.form['password']  # 유저가 아이디 pw 입력
 
+   #  if username_receive == "":
+   #     flash('아이디를 입력해주세요','err')
+   #     return redirect(url_for('login'))
+
     pw_hash = hashlib.sha256(password_receive.encode('utf-8')).hexdigest()  # 유저가 입력한 pw를 해쉬화
     result = db.users.find_one({'username': username_receive, 'password': pw_hash}) 
     # 아이디와 유저가 입력한 해쉬화된 pw가 DB에 저장되어 있는 해쉬화된 pw와 일치하는지 확인 
 
     if result is not None:  # 일치한다면
         session['logged_in'] = True
+<<<<<<< HEAD
         session['username'] = request.form['username']
         token = jwt.encode({
             'user': request.form['username'],
@@ -222,6 +234,15 @@ def login():
         return jsonify({'result':'success','token': token})    
     else:
         return jsonify({'result': 'fail', 'msg': '아이디/비밀번호가 일치하지 않습니다.'})
+=======
+      #   token = jwt.encode({
+      #       'user': request.form['username'],
+      #       'expiration': str(datetime.utcnow() + timedelta(seconds=10))}, app.config['SECRET_KEY'])
+        return render_template('index.html')        
+
+   #  else:
+   #      return jsonify({'result': 'fail', 'msg': '아이디/비밀번호가 일치하지 않습니다.'})
+>>>>>>> 1d22649a98e0c4b5b7e4ee01463d4cc771bb8b28
     
 
 # 회원가입
@@ -235,9 +256,6 @@ def sign_up():
         "username": username_receive,  # 아이디
         "password": password_hash,  # 비밀번호
         "nickname": nickname_receive,  # 닉네임
-        "profile_pic": "",  # 프로필 사진 파일 이름
-        "profile_pic_real": "profile_pics/profile_placeholder.png",  # 프로필 사진 기본 이미지
-        "profile_info": ""  # 프로필 한 마디
     }
     db.users.insert_one(doc) # 유저가 입력한 아이디 pw 닉네임을 DB에 저장
     return jsonify({'result': 'success'})
