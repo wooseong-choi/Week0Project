@@ -87,22 +87,24 @@
         </p>
     </div>
     </form> <br>
-    <form action="/login" method="POST">
-    <div class="field">
-        <p class="control">
-          <button class="button is-success" required onclick="log_in();" value="Login">
-            <span class="icon">
-                <i class="fas fa-sign-in-alt"></i>
-              </span>
-              <span>Login</span>
-          </button>
-        </p>
-    </div>
-    </form>
-    <form action="/register" method="POST">
-        <input type="submit" value="Register" class="container has text-right">
-    </form>
 
+    <div class="flex w-full justify-between">
+        <form action="/login" method="POST">
+        <div class="field">
+            <p class="control">
+            <button class="button is-success" required onclick="log_in();" value="Login">
+                <span class="icon">
+                    <i class="fas fa-sign-in-alt"></i>
+                </span>
+                <span>Login</span>
+            </button>
+            </p>
+        </div>
+        </form>
+        <form action="/register" method="POST">
+            <input style="width: auto; padding: 0; line-height: 40px;" type="submit" value="Register" class="container has text-right">
+        </form>
+    </div>
 </div>
 </body>
 </html>
