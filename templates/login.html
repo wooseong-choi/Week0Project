@@ -4,16 +4,51 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
-    <script src="static/script.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-
+    <script src="static/script.js"></script>
 </head>
+<script>
+    function log_in() {
+    let user_id = $("[name=user_id]").val();
+    let password = $("[name=password]").val();
+
+    if (user_id == "") {
+        alert("아이디를 입력해주세요.");
+        $("[name=user_id]").val();
+        return;
+    } 
+
+    if (password == "") {
+        alert("비밀번호를 입력해주세요.");
+        $("[name=password]").val();
+        return;
+    } 
+    $.ajax({
+        type: "POST",
+        url: "/login",
+        data: {
+            user_id: user_id,
+            password: password
+        },
+        success: function (response) {
+            if (response['result'] == 'success') {
+//                $.cookie('mytoken', response['token'], {path: '/'});
+                document.cookie = 'mytoken='+response['token']+'; path=/;';
+                window.location.replace("/");
+            } else {
+                alert(response['msg']);
+            }
+        }
+    });
+}
+
+</script>
 <body>
 
     <form action="/login" method="POST">
-        <input type="username" name="username" placeholder="Username"> <br><br>
+        <input type="user_id" name="user_id" placeholder="user_id"> <br><br>
         <input type="password" name="password" placeholder="Password"> <br><br>
-        <input type="submit" value="Login">
+        <input type="button" onclick="log_in();" value="Login">
     </form>
 
     <form action="/register" method="POST">

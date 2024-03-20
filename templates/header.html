@@ -1,31 +1,49 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="css/sytle.css">
 <!-- jQuery 를 포함합니다. -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap" rel="stylesheet">
+
 <style>
     .nav-div{
         display: block;
+        background-color: #03c75a;
     }
-    .nav{ position: relative;  display: flex;}
+    .nav{ position: relative;  display: flex; }
+</style>
+<style>
+    .mytitle {
+        width: 300px;
+        height: 200px;
+        background-position: center;
+        background-size: cover;
+    }
+    .wrap {
+        margin: 10px auto;
+        width: 300px;
+    }
+    .minW150{ min-width: 150px;}
+    .ul3-menu li { width: 33.3%; text-align: center; line-height: 50px; border-right: 1px solid #e3e5e8;  }
 </style>
 <script>
-    tailwind.config = {
-        theme: {
-            extend: {
-                colors: {
-                    myCustomColor: '#ffd600',
-                }
-            }
-        }
-    }
+    $(document).ready(function(){
+        $('#btn_logout').on('click',function(){
+            $('form[name=form_logout]').submit();
+        });
+
+    });
 </script>
 
-<div class="nav-div">
-    <ul class="nav bg-myCustomColor">
-      <li>도서 목록</li>
-      <li>도서 등록</li>
-      <li><a href="/mypage/">MyPage</a></li>
+<div class="nav-div flex w-full">
+    <ul class="flex nav w-full justify-between ul3-menu">
+      <li><a href="/books/list">도서 목록</a></li>
+      <li><a href="/books/upload">도서 등록</a></li>
+      <li><a href="/mypage">MyPage</a></li>
     </ul>
+    <button id="btn_logout" class="minW150">로그아웃</button>
 </div>
+
+<form action="/logout" method="POST" name="form_logout"></form>

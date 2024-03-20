@@ -4,8 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap" rel="stylesheet">
-
+  
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
     integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
@@ -67,25 +66,11 @@
         contentType: false,
         processData: false,
         success: function (response) {
-            alert(response["msg"])
-            window.location.reload()
+            alert(response["msg"]);
+            window.location.reload();
         }
     });
-}
-  //   $.ajax({
-  //     type: "POST",
-  //     url: "/books/upload",
-  //     data: { 'title_give': title, 'text_give': text, 'image_give': image },
-  //     success: function (response) { // 성공하면
-  //       if (response['result'] == 'success') {
-  //         alert("책 등록 완료!");
-  //         showBooks();
-  //       } else {
-  //         alert("서버 오류!")
-  //       }
-  //     }
-  //   })
-  // }
+  } 
 
     
 </script>
@@ -95,9 +80,15 @@
     <div class="jumbotron">
       <h1 class="page-title"> 도서 등록 </h1>
       <form>
-        <div>
-          <input type="file" id="input-image" name="chooseFile" accept="image/*" onchange="loadFile(this)">
-        </div>
+        
+          <div class="font-[sans-serif] max-w-md mx-auto">
+            <label class="text-sm text-black mb-2 block" for="input-image">Upload file</label>
+            <input id="input-image" name="chooseFile" accept="image/*" onchange="loadFile(this)" type="file"
+              class="w-full text-black text-sm bg-white border file:cursor-pointer cursor-pointer file:border-0 file:py-2.5 file:px-4 file:bg-gray-100 file:hover:bg-gray-200 file:text-black rounded" />
+            <p class="text-xs text-gray-400 mt-2">PNG, JPG SVG, WEBP, and GIF are Allowed.</p>
+          </div>
+        
+        
         <div>
           <input name="title" id="input-title" placeholder="제목을 입력하세요"></input>
         </div>
