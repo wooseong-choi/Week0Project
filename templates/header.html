@@ -8,13 +8,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap" rel="stylesheet">
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css"/>
-<style>
-    .nav-div{
-        display: block;
-        background-color: #03c75a;
-    }
-    .nav{ position: relative;  display: flex; }
-</style>
+
 <style>
     .mytitle {
         width: 300px;
@@ -26,8 +20,6 @@
         margin: 10px auto;
         width: 300px;
     }
-    .minW150{ min-width: 150px;}
-    .ul3-menu li { width: 33.3%; text-align: center; line-height: 50px; border-right: 1px solid #e3e5e8;  }
 </style>
 <script>
     $(document).ready(function(){
@@ -38,14 +30,6 @@
     });
 </script>
 
-<div class="nav-div flex w-full">
-    <ul class="flex nav w-full justify-between ul3-menu">
-      <li><a href="/books/list">도서 목록</a></li>
-      <li><a href="/books/upload">도서 등록</a></li>
-      <li><a href="/mypage">MyPage</a></li>
-    </ul>
-    <button id="btn_logout" class="minW150">로그아웃</button>
-</div>
 
 <form action="/logout" method="POST" name="form_logout"></form>
 <section class="hero is-primary is-medium">
@@ -67,7 +51,7 @@
             <div class="navbar-end">
               <span class="navbar-item">
                 <a class="button is-primary is-inverted">
-                  <span>Log Out</span>
+                  <span  id="btn_logout" >Log Out</span>
                 </a>
               </span>
             </div>
@@ -92,9 +76,9 @@
         <nav class="tabs is-centered is-mediem">
           <div class="container">
             <ul>
-              <li class="is-active"><a>도서 목록</a></li>
-              <li><a>도서 대여</a></li>
-              <li><a>My Page</a></li>
+              <li class="is-active"><a href="/books/list">도서 목록</a></li>
+              <li><a href="/books/upload" >도서 등록</a></li>
+              <li><a href="/mypage" >My Page</a></li>
             </ul>
           </div>
         </nav>
