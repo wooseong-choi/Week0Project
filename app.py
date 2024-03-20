@@ -14,7 +14,7 @@ from flask.json.provider import JSONProvider
 from functools import wraps
 
 import hashlib
-
+import math
 
 
 from flask import flash
@@ -42,9 +42,22 @@ def home():
 def show_books():
 
    page = request.args.get('page', 1, type=int)
-   limit = 3
-   all_books = list(db.book.find({}).sort('_id', -1))
-   return render_template('list.html', all_books=all_books)
+   limit = 6
+   all_books = list(db.book.find({}).sort('_id', -1).skip((page - 1) * limit).limit(limit)  )
+   
+   tot_count = db.book.count_documents({})
+   
+   last_page_num = math.ceil(tot_count / limit)
+   
+   start_page = 1
+   end_page = start_page+limit-1
+
+   if end_page > last_page_num: 
+      end_page = last_page_num
+
+
+
+   return render_template('list.html', all_books=all_books,page=page,limit=limit,last_page_num=last_page_num,tot_count=tot_count,start_page=start_page,end_page=end_page)
 
 @app.route('/books/upload', methods=['GET'])
 def goUpload():

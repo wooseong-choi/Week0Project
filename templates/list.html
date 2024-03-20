@@ -70,7 +70,43 @@
                 height: 300px;
             }
 
-            
+            .paging {
+                display: -webkit-box;
+                display: -ms-flexbox;
+                display: flex;
+                -webkit-box-pack: center;
+                -ms-flex-pack: center;
+                justify-content: center;
+                -webkit-box-align: center;
+                -ms-flex-align: center;
+                align-items: center;
+                margin: 40px auto;
+                gap: 4px;
+                overflow: hidden;
+                text-align: center;
+                font-size: 0;
+                overflow-x: auto;
+            }
+            .paging li {
+                display: inline-block;
+                vertical-align: middle;
+            }
+            .paging li.is-active a, .paging li.is-active a:hover, .paging li.is-active a:focus {
+                background-color: #164773;
+                font-weight: 700;
+                border-color: #164773;
+                color: #fff;
+            }
+            .paging a {
+                position: relative;
+                display: block;
+                color: #555;
+                width: 32px;
+                height: 32px;
+                line-height: 32px;
+                font-size: 16px;
+                border-radius: var(--radius);
+            }
         </style>
         <script>
             $(document).ready(function () {
@@ -78,40 +114,40 @@
             })
 
             function showBooks() {
-            $.ajax({
-                type: "GET",
-                url: "/books/list",
-                data: {},
-                success: function (response) {
-                    console.log(response["all_books"])
-                    if (response["result"] == "success") {
-                        let all_books = response['all_books']
-                        for (let i = 0; i < all_books.length; i++) {
-                            let title = all_books[i]['title']
-                            let text = all_books[i]['text']
-                            let image = all_books[i]['image']
-                            let date = image.substr(5, 13)
-                            console.log(image)
-                            let temp_html =
-                                `<div class="col">
-                                    <div class="card h-100">
-                                        <img src="../static/${image}" class="card-img-top" style="max-height: 300px">
-                                        <div class="card-body">
-                                            <h5 class="card-title">${title}</h5>
-                                            <p class="card-text">${text}</p>
-                                    </div>
-                                        <div class="card-footer">
-                                            <small class="text-muted">${date}</small>
+                $.ajax({
+                    type: "GET",
+                    url: "/books/list",
+                    data: {},
+                    success: function (response) {
+                        console.log(response["all_books"])
+                        if (response["result"] == "success") {
+                            let all_books = response['all_books']
+                            for (let i = 0; i < all_books.length; i++) {
+                                let title = all_books[i]['title']
+                                let text = all_books[i]['text']
+                                let image = all_books[i]['image']
+                                let date = image.substr(5, 13)
+                                console.log(image)
+                                let temp_html =
+                                    `<div class="col">
+                                        <div class="card h-100">
+                                            <img src="../static/${image}" class="card-img-top" style="max-height: 300px">
+                                            <div class="card-body">
+                                                <h5 class="card-title">${title}</h5>
+                                                <p class="card-text">${text}</p>
                                         </div>
-                                    </div>
-                                </div>`
+                                            <div class="card-footer">
+                                                <small class="text-muted">${date}</small>
+                                            </div>
+                                        </div>
+                                    </div>`
 
-                            $('#book-box').append(temp_html)
+                                $('#book-box').append(temp_html)
+                            }
                         }
                     }
-                }
-            });
-        }
+                });
+            }
 
 
             function likeBook(title) {
@@ -203,7 +239,9 @@
 
 
             }
-
+            function fnCmdPostsPaging (page){
+                location.href="/books/list?page="+page;
+            }
 
         </script>
     </head>
@@ -236,7 +274,17 @@
             {% endfor %}
         </div>
     </div>
-
+    <ul class="paging">
+         
+        {% for i in range(start_page,end_page+1) %}
+            {% if i == page %}
+            <li class="is-active"><a href="#none">{{ i }}</a></li>
+            {% endif %}
+            {% if i != page %}
+            <li><a href="#" onclick="fnCmdPostsPaging({{ i }}); return false;">{{ i }}</a></li>
+            {% endif %}    
+        {% endfor %}
+    </ul>
         
 
 
