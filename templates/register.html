@@ -7,6 +7,25 @@
     <script src="static/script.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
+    <style>
+        .on {
+            background-color: aquamarine;
+            /* position: relative; */
+            margin-bottom: 200px;
+            /* margin-bottom: 20px; */
+
+            margin: 100px auto;
+
+        }
+        .btn-oval {
+        /* border-radius: 50px; */
+        }
+        .find-btn{
+	        text-align: center;
+            border-radius: 50px;
+        }
+    </style>
+
 </head>
 
 <script>
@@ -125,33 +144,33 @@
 
 <body>
 
-    <div>
-        <div class="form-group">
-            <label for="input-username">-userid</label>
-            <input id="input-username" class="form-control" placeholder="">
+    <div class="on">
+        <div class="find-btn">
+            <input id="input-username" style="border-radius: 50px; width:200px;height: 25px;" class="form-control" placeholder="User_id"></div>
+
+        <div class="find-btn">
+            <button type="button" style="border-radius: 50px; width:100px;height: 50px; background-color: aquamarine; border-color: aquamarine; color: green" class="btn btn-primary btn-oval" onclick="checkDuplicate()">중복 확인</button></div>
+
+
+        <div class="find-btn">
+            <input id="input-nickname" style="border-radius: 50px; width:200px;height: 25px;" class="form-control" placeholder="Name">
         </div>
 
-        <button type="button" class="btn btn-primary" onclick="checkDuplicate()">Username 중복확인</button>
 
-        <div class="form-group">
-            <label for="input-nickname">-name</label>
-            <input id="input-nickname" class="form-control" placeholder="">
+        <div class="find-btn">
+            <input type="password" id="input-password" style="border-radius: 50px; width:200px;height: 25px;" class="form-control" placeholder="Password">
+        </div>
+        <div class="find-btn">
+            <input type="password" id="input-password2" style="border-radius: 50px; width:200px;height: 25px;" class="form-control" placeholder="Passchck">
         </div>
 
-
-        <div class="form-group">
-            <label for="input-password">-password</label>
-            <input type="password" id="input-password" class="form-control" placeholder="">
+        <div class="find-btn">
+            <button type="button" style="border-radius: 50px; width:100px;height: 50px; background-color: aquamarine; border-color: aquamarine; color: green;" class="btn btn-primary btn-oval" onclick="checkpass()">비밀번호 확인</button>
         </div>
-        <div class="form-group">
-            <label for="input-password2">-password2</label>
-            <input type="password" id="input-password2" class="form-control" placeholder="">
+        <div class="find-btn">
+            <button type="button" style="border-radius: 50px; width:100px;height: 50px; background-color: aquamarine; border-color: aquamarine; color: green" class="btn btn-primary btn-oval" onclick="register()">완료</button>
         </div>
 
-        <button type="button" class="btn btn-primary" onclick="checkpass()">패스워드 확인</button>
-
-
-        <button type="button" class="btn btn-primary" onclick="register()">등록 저장</button>
     </div>
 
 

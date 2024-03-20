@@ -3,6 +3,24 @@
 <head>
     {% include 'non_login_header.html' %}
     <script src="static/script.js"></script>
+    <style>
+        .oustset input[type="user_id"],
+        .oustset input[type="password"] {
+            color: black;
+            border-radius: 50px;
+            position: center;
+
+            background-color:beige;
+        }
+        .oustset form {
+            background-color: aquamarine;
+            position: center;
+        }
+        input {
+            color :forestgreen;
+            position: center;
+        }
+    </style>
 </head>
 <script>
     function log_in() {
@@ -43,15 +61,21 @@
 </script>
 <body>
 
-    <form action="/login" method="POST">
-        <input type="user_id" name="user_id" placeholder="user_id"> <br><br>
-        <input type="password" name="password" placeholder="Password"> <br><br>
-        <input type="button" onclick="log_in();" value="Login">
-    </form>
+    <div class="oustset">
+        <form action="/login" method="POST">
+            <input type="user_id" required name="user_id" placeholder="user_id"> <br><br>
+            <input type="password" required name="password" placeholder="Password"> <br><br>
 
-    <form action="/register" method="POST">
-        <input type="submit" value="Register">
-    </form>
+        </form>
+        <form action="/login" method="POST">
+            <input type="button" required onclick="log_in();" value="Login">
+        </form>    
+
+        <form action="/register" method="POST">
+            <input type="submit" value="Register">
+        </form>
+    
+    </div>
 
 </body>
 </html>

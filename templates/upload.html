@@ -69,6 +69,10 @@
         success: function (response) {
             alert(response["msg"]);
             window.location.replace('/books/list');
+        },
+        error: function (error) {
+            console.log(error);
+            alert("이미지 업로드 실패!");
         }
     });
   }
@@ -88,33 +92,17 @@
       </div> -->
       <form>
         책 표지 사진
-        <div class="file has-name is-small is-normal">
-          <label class="file-label">
-            <input class="file-input" type="file" name="resume">
-            <span class="file-cta">
-              <span class="file-icon">
-                <i class="fas fa-upload"></i>
-              </span>
-              <span class="file-label">
-                파일을 선택해주세요
-              </span>
-            </span>
-            <span class="file-name">
-             
-            </span>
-
-          </label>
-        </div>
-        <!-- <div>
+        
+        <div>
           <input type="file" id="input-image" name="chooseFile" accept="image/*">
-        </div> -->
+        </div>
         <br>
         <div class="control">
-          제목<input class="input is-hovered" type="text" placeholder="책 제목을 입력하세요">
+          제목<input class="input is-hovered" id ="input-title" type="text" placeholder="책 제목을 입력하세요">
         </div>
         <br>
         <div>
-          내용 <textarea class="textarea" placeholder="책의 내용을 간단히 소개해주세요" rows="10"></textarea>
+          내용 <textarea class="textarea" id ="input-text" placeholder="책의 내용을 간단히 소개해주세요" rows="10"></textarea>
         </div>
         <br>
         <div> 

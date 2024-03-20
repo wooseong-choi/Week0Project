@@ -1,6 +1,7 @@
 from pymongo import MongoClient
 import jwt
 import hashlib
+import os
 
 from datetime import datetime, timedelta
 
@@ -40,7 +41,7 @@ def home():
 @app.route('/books/list', methods=['GET'])
 def show_books():
    all_books = list(db.book.find({}))
-   return render_template('list.html',all_books=all_books)
+   return render_template('list.html', all_books=all_books)
 
 @app.route('/books/upload', methods=['GET'])
 def goUpload():
@@ -62,7 +63,7 @@ def upload():
    # 확장자 나누기
    extension = image.filename.split('.')[-1]
    # static 폴더에 저장
-   save_to = f'static/{filename}.{extension}'
+   save_to = os.path.join('static', f'{filename}.{extension}')
    image.save(save_to)
    
    # DB에 저장
@@ -182,7 +183,7 @@ def delBook():
       return jsonify({'result': 'failure'})   
 
 
-@app.route('/mypage/reqBookRental' , methods=['POST'] )
+@app.route( '/mypage/reqBookRental' , method=['POST'] )
 def reqBookRental():
    if session['logged_in'] == False : 
       return render_template('mypage.html', error='No session')   
