@@ -17,7 +17,30 @@ import hashlib
 app = Flask(__name__)
 
 client = MongoClient('localhost', 27017)  # mongoDB는 27017 포트로 돌아갑니다.
-db = client.books                        # 'jungle'라는 이름의 db를 만듭니다.
+db = client.week0Project                        # 'jungle'라는 이름의 db를 만듭니다.
+
+app.config['SECRET_KEY'] = 'f1fb0b3154444c53b7aa815e013f7f4f'
+
+# 토큰이 있는지 확인하고 인증을 처리하는 데코레이터
+def token_required(func):
+    @wraps(func)
+    def decorated(*args, **kwargs):
+        token = request.args.get('token')
+        if not token:
+            return jsonify({'error' : 'Token is missing!'}), 401
+        try:
+            payload = jwt.decode(token, app.config['SECRET_KEY'])
+        except jwt.ExpiredSignatureError:
+            return jsonify({'error' : 'Token is expired!'}), 401
+        except jwt.InvalidTokenError:
+            return jsonify({'error' : 'Invalid Token!'}), 401
+        return func(*args, **kwargs)
+    return decorated
+
+
+
+
+
 
 @app.route('/')
 def home():
@@ -63,9 +86,16 @@ def posting():
 
     return jsonify({'msg': '업로드 완료!'})
 
-@app.route('/mypage/<userId>', methods=['GET'])
-def mypage(userId):
-   print(userId)
+@app.route('/mypage', methods=['GET'])
+@token_required
+def mypage():
+   
+   
+   if session['logged_in'] == False : 
+      return render_template('mypage.html', error='No session')   
+   
+   
+   userId = session['username']
 
    users = list( db.users.find({'user_id': userId} ) )
 
@@ -144,21 +174,6 @@ def reject(userId):
 #'Logged' #session.clear()
     
 
-# 토큰이 있는지 확인하고 인증을 처리하는 데코레이터
-def token_required(func):
-    @wraps(func)
-    def decorated(*args, **kwargs):
-        token = request.args.get('token')
-        if not token:
-            return jsonify({'error' : 'Token is missing!'}), 401
-        try:
-            payload = jwt.decode(token, app.config['SECRET_KEY'])
-        except jwt.ExpiredSignatureError:
-            return jsonify({'error' : 'Token is expired!'}), 401
-        except jwt.InvalidTokenError:
-            return jsonify({'error' : 'Invalid Token!'}), 401
-        return func(*args, **kwargs)
-    return decorated
 
 
 
@@ -180,6 +195,7 @@ def auth():
 @app.route('/logout', methods=['POST'])
 def logout():
     session['logged_in'] = False
+    session.pop('username', None)
     return render_template('login.html') #session.clear(), 
 
 
@@ -199,11 +215,11 @@ def login():
 
     if result is not None:  # 일치한다면
         session['logged_in'] = True
+        session['username'] = request.form['username']
         token = jwt.encode({
             'user': request.form['username'],
             'expiration': str(datetime.utcnow() + timedelta(seconds=10))}, app.config['SECRET_KEY'])
-        return jsonify({'token': token})    
-    
+        return jsonify({'result':'success','token': token})    
     else:
         return jsonify({'result': 'fail', 'msg': '아이디/비밀번호가 일치하지 않습니다.'})
     
