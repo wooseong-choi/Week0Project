@@ -24,30 +24,7 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'f1fb0b3154444c53b7aa815e013f7f4f'
 
 client = MongoClient('localhost', 27017)  # mongoDB는 27017 포트로 돌아갑니다.
-db = client.week0Project                        # 'jungle'라는 이름의 db를 만듭니다.
-
-app.config['SECRET_KEY'] = 'f1fb0b3154444c53b7aa815e013f7f4f'
-
-# 토큰이 있는지 확인하고 인증을 처리하는 데코레이터
-def token_required(func):
-    @wraps(func)
-    def decorated(*args, **kwargs):
-        token = request.args.get('token')
-        if not token:
-            return jsonify({'error' : 'Token is missing!'}), 401
-        try:
-            payload = jwt.decode(token, app.config['SECRET_KEY'])
-        except jwt.ExpiredSignatureError:
-            return jsonify({'error' : 'Token is expired!'}), 401
-        except jwt.InvalidTokenError:
-            return jsonify({'error' : 'Invalid Token!'}), 401
-        return func(*args, **kwargs)
-    return decorated
-
-
-
-
-
+db = client.books                        # 'jungle'라는 이름의 db를 만듭니다.
 
 @app.route('/')
 def home():
@@ -55,9 +32,11 @@ def home():
       return render_template('login.html')
    else:
       return render_template('index.html')
-   #db.users.insert_one({'id':'ghkdgo868','password':'dddd','name':'최우성'})
-   #db.books.insert_one({'book_name':'신비한 동물사전','book_comment':'이 책은 대단합니다.','book_image':'test.jpg','user_row_id':'test'})
-   #db.rental.insert_one({'rental_place':'교육관 1층','rental_period':'대여 기간','rental_time':'약속 시간','user_row_id':'test', 'book_row_id':'testbook'})
+   
+   # db.users.insert_one({'id':'asd','password':'123','name':'asd'})
+   # db.books.insert_one({'book_name':'asd','book_comment':'asd','book_image':'asd','user_row_id':'asd'})
+   # db.rental.insert_one({'rental_place':'교육관 1층','rental_period':'대여 기간','rental_time':'약속 시간','user_row_id':'test', 'book_row_id':'testbook'})
+
 
 @app.route('/books/list', methods=['GET'])
 def show_books():
@@ -93,16 +72,9 @@ def upload():
 
     return jsonify({'msg': '업로드 완료!'})
 
-@app.route('/mypage', methods=['GET'])
-@token_required
-def mypage():
-   
-   
-   if session['logged_in'] == False : 
-      return render_template('mypage.html', error='No session')   
-   
-   
-   userId = session['username']
+@app.route('/mypage/<userId>', methods=['GET'])
+def mypage(userId):
+   print(userId)
 
    users = list( db.users.find({'user_id': userId} ) )
 
@@ -181,6 +153,21 @@ def reject(userId):
 #'Logged' #session.clear()
     
 
+# 토큰이 있는지 확인하고 인증을 처리하는 데코레이터
+def token_required(func):
+    @wraps(func)
+    def decorated(*args, **kwargs):
+        token = request.args.get('token')
+        if not token:
+            return jsonify({'error' : 'Token is missing!'}), 401
+        try:
+            payload = jwt.decode(token, app.config['SECRET_KEY'])
+        except jwt.ExpiredSignatureError:
+            return jsonify({'error' : 'Token is expired!'}), 401
+        except jwt.InvalidTokenError:
+            return jsonify({'error' : 'Invalid Token!'}), 401
+        return func(*args, **kwargs)
+    return decorated
 
 
 
@@ -202,7 +189,6 @@ def auth():
 @app.route('/logout', methods=['POST'])
 def logout():
     session['logged_in'] = False
-    session.pop('username', None)
     return render_template('login.html') #session.clear(), 
 
 
@@ -224,17 +210,15 @@ def login():
     result = db.users.find_one({'username': username_receive, 'password': pw_hash}) 
     # 아이디와 유저가 입력한 해쉬화된 pw가 DB에 저장되어 있는 해쉬화된 pw와 일치하는지 확인 
 
+    if username_receive == "":
+       return jsonify({'result': 'fail', 'msg': '아이디/비밀번호가 일치하지 않습니다.'})
+    if password_receive == "":
+       return jsonify({'result': 'fail', 'msg': '아이디/비밀번호가 일치하지 않습니다.'})
+
     if result is not None:  # 일치한다면
         session['logged_in'] = True
-<<<<<<< HEAD
-        session['username'] = request.form['username']
-        token = jwt.encode({
-            'user': request.form['username'],
-            'expiration': str(datetime.utcnow() + timedelta(seconds=10))}, app.config['SECRET_KEY'])
-        return jsonify({'result':'success','token': token})    
-    else:
-        return jsonify({'result': 'fail', 'msg': '아이디/비밀번호가 일치하지 않습니다.'})
-=======
+
+
       #   token = jwt.encode({
       #       'user': request.form['username'],
       #       'expiration': str(datetime.utcnow() + timedelta(seconds=10))}, app.config['SECRET_KEY'])
@@ -242,7 +226,6 @@ def login():
 
    #  else:
    #      return jsonify({'result': 'fail', 'msg': '아이디/비밀번호가 일치하지 않습니다.'})
->>>>>>> 1d22649a98e0c4b5b7e4ee01463d4cc771bb8b28
     
 
 # 회원가입
