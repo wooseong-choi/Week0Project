@@ -1,6 +1,7 @@
 from pymongo import MongoClient
 import jwt
 import hashlib
+import os
 
 from datetime import datetime, timedelta
 
@@ -40,7 +41,7 @@ def home():
 @app.route('/books/list', methods=['GET'])
 def show_books():
    all_books = list(db.book.find({}))
-   return render_template('list.html',all_books=all_books)
+   return render_template('list.html', all_books=all_books)
 
 @app.route('/books/upload', methods=['GET'])
 def goUpload():
@@ -62,7 +63,7 @@ def upload():
    # 확장자 나누기
    extension = image.filename.split('.')[-1]
    # static 폴더에 저장
-   save_to = f'static/{filename}.{extension}'
+   save_to = os.path.join('static', f'{filename}.{extension}')
    image.save(save_to)
    
    # DB에 저장
@@ -181,7 +182,7 @@ def delBook():
       return jsonify({'result': 'failure'})   
 
 
-@app.route( '/mypage/reqBookRental' , method=['POST'] )
+@app.route( '/mypage/reqBookRental' , methods=['POST'] )
 def reqBookRental():
    if session['logged_in'] == False : 
       return render_template('mypage.html', error='No session')   
@@ -193,13 +194,13 @@ def reqBookRental():
    book = db.book.find_one({'_id':ObjectId(bookId)})
 
    rental = {
-            'rental_place': title,
-            'rental_period': open_year,
-            'rental_time': open_month,
-            'book_row_id': viewers,
-            'book_name': poster_url,
-            'take_user_id': info_url,
-            'user_id': likes,
+            'rental_place': 'title',
+            'rental_period': 'open_year',
+            'rental_time': 'open_month',
+            'book_row_id': 'viewers',
+            'book_name': 'poster_url',
+            'take_user_id': 'info_url',
+            'user_id': 'likes',
             'rental_status': '대여 신청'
         }
 
@@ -207,10 +208,6 @@ def reqBookRental():
 
 
 
-   if result.modified_count > 0:
-      return jsonify({'result': 'success'})
-   else:
-      return jsonify({'result': 'failure'})    
 
 
 
