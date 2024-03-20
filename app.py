@@ -11,10 +11,12 @@ from bson import ObjectId
 
 from flask.json.provider import JSONProvider
 
+from push_notifications import send_push_notification
+
 app = Flask(__name__)
 
 client = MongoClient('localhost', 27017)  # mongoDB는 27017 포트로 돌아갑니다.
-db = client.books                        # 'jungle'라는 이름의 db를 만듭니다.
+db = client.week0Project                        # 'jungle'라는 이름의 db를 만듭니다.
 
 @app.route('/')
 def home():
@@ -38,7 +40,8 @@ def mypage(userId):
       rental = []
 
       for tempBook in book :
-         tempRental = list( db.rental.find( {'book_row_id': str(tempBook['_id']) ,'rental_status':'대여 요청' } ) )
+         #tempRental = list( db.rental.find( {'book_row_id': str(tempBook['_id']) ,'rental_status':'대여 요청' } ) )
+         tempRental = list( db.rental.find( {'book_row_id': str(tempBook['_id'])  } ) )
          rental.append(tempRental)
       
 
@@ -92,12 +95,25 @@ def join(userId):
 
    result = db.rental.update_one( {'_id':ObjectId(id)}, {'$set': {'rental_status':'수락'} } )
 
+   print(result)
 
-   if result.deleted_count == 1:
+   if result.modified_count > 0:
       return jsonify({'result': 'success'})
    else:
       return jsonify({'result': 'failure'})    
 
+@app.route('/mypage/<userId>/reject', methods=['POST'])
+def reject(userId):
+   id = request.form['objId']
+
+   result = db.rental.update_one( {'_id':ObjectId(id)}, {'$set': {'rental_status':'거절'} } )
+
+   print(result)
+
+   if result.modified_count > 0:
+      return jsonify({'result': 'success'})
+   else:
+      return jsonify({'result': 'failure'})    
 
 
 

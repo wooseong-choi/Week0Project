@@ -80,10 +80,13 @@
       data:{'objId':objId },
       success: function(response){
         console.log(response);
-        var result = response.result[0];
-        $('[name=title]').val(result.book_name);
-        $('[name=content]').val(result.book_comment);
-        $('[name=bookImg]').attr('src',result.book_comment);
+        var result = response.result;
+        if(result == 'success'){
+          alert('대여 요청을 수락하였습니다.');
+        }else{
+          alert('오류로 인해 대여 요청이 수락되지 않았습니다. 잠시 후 다시 시도해 주세요.');
+        }
+
 
       }
     });
@@ -98,10 +101,12 @@
       data:{'objId':objId },
       success: function(response){
         console.log(response);
-        var result = response.result[0];
-        $('[name=title]').val(result.book_name);
-        $('[name=content]').val(result.book_comment);
-        $('[name=bookImg]').attr('src',result.book_comment);
+        var result = response.result;
+        if(result == 'success'){
+          alert('대여 요청을 거절하였습니다.');
+        }else{
+          alert('오류로 인해 대여 요청이 거절되지 않았습니다. 잠시 후 다시 시도해 주세요.');
+        }
 
       }
     });
@@ -161,14 +166,14 @@
             <!-- Modal body -->
             <div class="p-4 md:p-5 space-y-4 w-full flex" >
                 <div class="w-8/12 mt-0">
-                  장소 : <input name="place" class="mt-1 px-3 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 focus:outline-none focus:border-sky-500 focus:ring-sky-500 inline-block w-8/12 rounded-md sm:text-sm focus:ring-1 invalid:border-pink-500 invalid:text-pink-600 focus:invalid:border-pink-500 focus:invalid:ring-pink-500 disabled:shadow-none"><br>
-                  시간 : <input name="time" class="mt-1 px-3 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 focus:outline-none focus:border-sky-500 focus:ring-sky-500 inline-block w-8/12 rounded-md sm:text-sm focus:ring-1 invalid:border-pink-500 invalid:text-pink-600 focus:invalid:border-pink-500 focus:invalid:ring-pink-500 disabled:shadow-none"><br>
-                  기간 : <input name="period" class="mt-1 px-3 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 focus:outline-none focus:border-sky-500 focus:ring-sky-500 inline-block w-8/12 rounded-md sm:text-sm focus:ring-1 invalid:border-pink-500 invalid:text-pink-600 focus:invalid:border-pink-500 focus:invalid:ring-pink-500 disabled:shadow-none">
+                  장소 : <input name="place" class="mt-1 px-3 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 focus:outline-none focus:border-sky-500 focus:ring-sky-500 inline-block w-4/5 rounded-md sm:text-sm focus:ring-1 invalid:border-pink-500 invalid:text-pink-600 focus:invalid:border-pink-500 focus:invalid:ring-pink-500 disabled:shadow-none"><br>
+                  시간 : <input name="time" class="mt-1 px-3 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 focus:outline-none focus:border-sky-500 focus:ring-sky-500 inline-block w-4/5 rounded-md sm:text-sm focus:ring-1 invalid:border-pink-500 invalid:text-pink-600 focus:invalid:border-pink-500 focus:invalid:ring-pink-500 disabled:shadow-none"><br>
+                  기간 : <input name="period" class="mt-1 px-3 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 focus:outline-none focus:border-sky-500 focus:ring-sky-500 inline-block w-4/5 rounded-md sm:text-sm focus:ring-1 invalid:border-pink-500 invalid:text-pink-600 focus:invalid:border-pink-500 focus:invalid:ring-pink-500 disabled:shadow-none">
                 </div>
-                <div class="w-4/12 mt-0">
-                  <button class="mt-1 inline-flex items-center px-4 py-2 font-semibold leading-6 text-sm shadow rounded-md text-white bg-indigo-500">채팅하기</button><br>
-                  <button id="joinBtn" class="mt-1 inline-flex items-center px-4 py-2 font-semibold leading-6 text-sm shadow rounded-md text-white bg-indigo-500" onclick="join()">수락</button><br>
-                  <button id="rejectBtn" class="mt-1 inline-flex items-center px-4 py-2 font-semibold leading-6 text-sm shadow rounded-md text-white bg-indigo-500" onclick="reject()">거절</button>
+                <div class="w-4/12 mt-0 items-center pr-5" style="margin-top: 0!important; ">
+                  <!-- <button class="mt-1 inline-flex items-center px-4 py-2 font-semibold leading-6 text-sm shadow rounded-md text-white bg-indigo-500">채팅하기</button><br> -->
+                  <button id="joinBtn" class="w-full mt-1 inline-flex items-center px-4 py-2 font-semibold leading-10 text-sm shadow rounded-md text-white bg-indigo-500" onclick="join()">수락</button><br>
+                  <button id="rejectBtn" class="w-full mt-1 inline-flex items-center px-4 py-2 font-semibold leading-10 text-sm shadow rounded-md text-white bg-indigo-500" onclick="reject()">거절</button>
                 </div>
             </div>
         </div>
@@ -178,4 +183,6 @@
 
 
 </body>
+
+{% include 'firebase.html' %}
 </html>
