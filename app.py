@@ -24,7 +24,10 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'f1fb0b3154444c53b7aa815e013f7f4f'
 
 client = MongoClient('localhost', 27017)  # mongoDB는 27017 포트로 돌아갑니다.
-db = client.books                        # 'jungle'라는 이름의 db를 만듭니다.
+db = client.week0Project                        # 'jungle'라는 이름의 db를 만듭니다.
+
+app.config['SECRET_KEY'] = 'f1fb0b3154444c53b7aa815e013f7f4f'
+
 
 @app.route('/')
 def home():
@@ -72,9 +75,16 @@ def upload():
 
     return jsonify({'msg': '업로드 완료!'})
 
-@app.route('/mypage/<userId>', methods=['GET'])
-def mypage(userId):
-   print(userId)
+@app.route('/mypage', methods=['GET'])
+
+def mypage():
+   
+   
+   if session['logged_in'] == False : 
+      return render_template('mypage.html', error='No session')   
+   
+   
+   userId = session['user_id']
 
    users = list( db.users.find({'user_id': userId} ) )
 
@@ -180,7 +190,6 @@ def public():
 
 # 인증된 페이지
 @app.route('/auth')
-@token_required
 def auth():
     return 'JWT is verified. Welcome dashboard'
 
@@ -199,7 +208,7 @@ def register():
 
 @app.route('/login', methods=['POST'])
 def login():
-    username_receive = request.form['username']
+    username_receive = request.form['user_id']
     password_receive = request.form['password']  # 유저가 아이디 pw 입력
 
    #  if username_receive == "":
@@ -207,7 +216,7 @@ def login():
    #     return redirect(url_for('login'))
 
     pw_hash = hashlib.sha256(password_receive.encode('utf-8')).hexdigest()  # 유저가 입력한 pw를 해쉬화
-    result = db.users.find_one({'username': username_receive, 'password': pw_hash}) 
+    result = db.users.find_one({'user_id': username_receive, 'password': pw_hash}) 
     # 아이디와 유저가 입력한 해쉬화된 pw가 DB에 저장되어 있는 해쉬화된 pw와 일치하는지 확인 
 
     if username_receive == "":
@@ -217,16 +226,13 @@ def login():
 
     if result is not None:  # 일치한다면
         session['logged_in'] = True
-
-
-      #   token = jwt.encode({
-      #       'user': request.form['username'],
-      #       'expiration': str(datetime.utcnow() + timedelta(seconds=10))}, app.config['SECRET_KEY'])
-        return render_template('index.html')        
-
-   #  else:
-   #      return jsonify({'result': 'fail', 'msg': '아이디/비밀번호가 일치하지 않습니다.'})
-    
+        session['user_id'] = username_receive
+        token = jwt.encode({
+            'user': request.form['user_id'],
+            'expiration': str(datetime.utcnow() + timedelta(seconds=10))}, app.config['SECRET_KEY'])
+        return jsonify({'result':'success','token': token})    
+    else:
+        return jsonify({'result': 'fail', 'msg': '아이디/비밀번호가 일치하지 않습니다.'})
 
 # 회원가입
 @app.route('/sign_up/save', methods=['POST'])
@@ -236,9 +242,9 @@ def sign_up():
     nickname_receive = request.form['nickname_give']
     password_hash = hashlib.sha256(password_receive.encode('utf-8')).hexdigest() # password 해쉬화 함수
     doc = {
-        "username": username_receive,  # 아이디
+        "user_id": username_receive,  # 아이디
         "password": password_hash,  # 비밀번호
-        "nickname": nickname_receive,  # 닉네임
+        "name": nickname_receive,  # 닉네임
     }
     db.users.insert_one(doc) # 유저가 입력한 아이디 pw 닉네임을 DB에 저장
     return jsonify({'result': 'success'})
