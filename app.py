@@ -39,7 +39,7 @@ def home():
 
 @app.route('/books/list', methods=['GET'])
 def show_books():
-   all_books = list(db.book.find({}, {'_id': False}))
+   all_books = list(db.book.find({}))
    return render_template('list.html',all_books=all_books)
 
 @app.route('/books/upload', methods=['GET'])
@@ -179,6 +179,40 @@ def delBook():
       return jsonify({'result': 'success'})
    else:
       return jsonify({'result': 'failure'})   
+
+
+@app.route( '/mypage/reqBookRental' , method=['POST'] )
+def reqBookRental():
+   if session['logged_in'] == False : 
+      return render_template('mypage.html', error='No session')   
+
+   bookId = request.form['objId']
+
+   reqUserId = session['user_id']
+
+   book = db.book.find_one({'_id':ObjectId(bookId)})
+
+   rental = {
+            'rental_place': title,
+            'rental_period': open_year,
+            'rental_time': open_month,
+            'book_row_id': viewers,
+            'book_name': poster_url,
+            'take_user_id': info_url,
+            'user_id': likes,
+            'rental_status': '대여 신청'
+        }
+
+   db.rental.insert_one(rental)
+
+
+
+   if result.modified_count > 0:
+      return jsonify({'result': 'success'})
+   else:
+      return jsonify({'result': 'failure'})    
+
+
 
 #'Logged' #session.clear()
 #로그아웃
