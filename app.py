@@ -39,7 +39,7 @@ def home():
 
 @app.route('/books/list', methods=['GET'])
 def show_books():
-   all_books = list(db.book.find({}, {'_id': False}))
+   all_books = list(db.book.find({}))
    return render_template('list.html',all_books=all_books)
 
 @app.route('/books/upload', methods=['GET'])
@@ -200,11 +200,11 @@ def login():
    username_receive = request.form['user_id']
    password_receive = request.form['password']  # 유저가 아이디 pw 입력
 
-    pw_hash = hashlib.sha256(password_receive.encode('utf-8')).hexdigest()  # 유저가 입력한 pw를 해쉬화
-    result = db.users.find_one({'user_id': username_receive, 'password': pw_hash}) 
+   pw_hash = hashlib.sha256(password_receive.encode('utf-8')).hexdigest()  # 유저가 입력한 pw를 해쉬화
+   result = db.users.find_one({'user_id': username_receive, 'password': pw_hash}) 
     # 아이디와 유저가 입력한 해쉬화된 pw가 DB에 저장되어 있는 해쉬화된 pw와 일치하는지 확인 
 
-    id_mac = db.users.find_one({'user_id': username_receive})
+   id_mac = db.users.find_one({'user_id': username_receive})
 
    #  if (username_receive == id_mac):
    #     return None
