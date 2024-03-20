@@ -5,6 +5,31 @@
         <title>Jungle Books</title>
         
         <style>
+            * {
+            font-family: 'Jua', sans-serif;
+        }
+
+        .wrap {
+            margin: auto;
+            width: 1000px;
+        }
+
+        /* .title {
+            background-color: gainsboro;
+            padding: 20px 30px;
+        } */
+
+        .form-group {
+            margin: 10px 0;
+        }
+
+        .posting-box {
+            margin: 10px auto 30px auto;
+            width: 500px;
+            border: 3px solid black;
+            border-radius: 5px;
+            padding: 25px;
+        }
             .center {
                 text-align: center;
             }
@@ -100,6 +125,8 @@
         </script>
     </head>
     <body>
+        
+        <div class ="wrap">
         <div class="book-column" id="book-box">
             {% for item in all_books %}
             <div class = "card">
@@ -125,6 +152,7 @@
             </div>
             {% endfor %}
         </div>
+    </div>
 
         
     </body>

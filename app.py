@@ -50,8 +50,9 @@ def goUpload():
 def upload():
     title_receive = request.form["title_give"]
     text_receive = request.form["text_give"]
+    print(text_receive)
     image = request.files["image_give"]
-
+   
     userId = session['user_id']
 
     # static 폴더에 저장될 파일 이름 생성하기 
