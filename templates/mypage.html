@@ -3,10 +3,58 @@
 <head>
   {% include 'header.html' %}
   <title>Document</title>
+  <style>
+    .center {
+        text-align: center;
+    }
+
+    .book-list {
+        width: 500px;
+        margin: 20px auto 0 auto;
+    }
+
+    .book-name {
+        display: inline-block;
+    }
+
+    .book-name:hover {
+        text-decoration: underline;
+    }
+
+    #book-box {
+        width: 800px;
+    }
+    .card {
+        /* margin-bottom: 35px; */
+        width: 25rem;
+        display: inline-block;
+        
+        margin: 10px 10px 10px 10px;
+    }
+
+    .sorter-box {
+        width: 500px;
+    }
+
+    .mypage-sub-menu{
+      border-radius: 0 0 1em 1em;
+    }
+
+    .mypage-sub-menu p {
+      height: 64px;
+      line-height: 64px;
+      font-size: var(--fs-lg);
+      box-sizing: border-box;
+      border-bottom : 1px solid #767676;
+      border-radius: 0 0 1em 1em;
+    }
+  </style>
+
 </head>
 <script>
   {% if error %}
     alert('회원정보가 없습니다.');
+    location.replace('/login')
   {% endif %}
 
   function openPop(objId){
@@ -17,17 +65,17 @@
 
     $.ajax({
       type:'POST',
-      url:'/mypage/{{ name }}/bookEdit',
+      url:'/mypage/bookEdit',
       data:{'objId':objId },
       success: function(response){
         console.log(response);
         var result = response.result[0];
-        $('[name=title]').val(result.book_name);
-        $('[name=content]').val(result.book_comment);
-        $('[name=bookImg]').attr('src',result.book_comment);
+        $('[name=editTitle]').val(result.title);
+        $('[name=editContent]').val(result.text);
+        $('[name=editBookImg]').attr('src','/static/'+result.image);
 
-        $('#joinBtn').attr('onclick',"join('"+objId+"')");
-        $('#rejectBtn').attr('onclick',"reject('"+objId+"')");
+        $('#delBtn').attr('onclick',"delBook('"+objId+"')");
+        $('#editBtn').attr('onclick',"editBook('"+objId+"')");
 
       }
     });
@@ -48,14 +96,14 @@
 
     $.ajax({
       type:'POST',
-      url:'/mypage/{{ name }}/rental',
+      url:'/mypage/rental',
       data:{'objId':objId },
       success: function(response){
         console.log(response);
         var result = response.result[0];
-        $('[name=title]').val(result.book_name);
-        $('[name=content]').val(result.book_comment);
-        $('[name=bookImg]').attr('src',result.book_comment);
+        $('[name=title]').val(result.title);
+        $('[name=content]').val(result.text);
+        $('[name=bookImg]').attr('src','/static/'+result.image);
 
         $('#joinBtn').attr('onclick',"join('"+objId+"')");
         $('#rejectBtn').attr('onclick',"reject('"+objId+"')");
@@ -72,17 +120,73 @@
     
   }
 
-  function join(objId){
+  // 도서 삭제
+  function delBook(objId){
+    
+    if(!confirm('도서를 삭제하시겠습니까?'))
+      return;
 
     $.ajax({
       type:'POST',
-      url:'/mypage/{{ name }}/join',
+      url:'/mypage/delBook',
+      data:{'objId':objId },
+      success: function(response){
+        console.log(response);
+        var result = response.result;
+        if(result == 'success'){
+          alert('도서를 삭제했습니다.');
+          location.reload();
+        }else{
+          alert('오류로 인해 삭제되지 않았습니다. 잠시 후 다시 시도해 주세요.');
+        }
+      }
+    });
+
+  }
+
+    
+  function editBook(objId){
+
+    if(!confirm('도서를 수정하시겠습니까?'))
+      return;
+
+    $.ajax({
+      type:'POST',
+      url:'/mypage/editBook',
+      data:{
+        'objId':objId,
+        'title':$('[name=editTitle]').val(),
+        'content':$('[name=editContent]').val()
+      },
+      success: function(response){
+        console.log(response);
+        var result = response.result;
+        if(result == 'success'){
+          alert('도서를 수정했습니다.');
+          location.reload();
+        }else{
+          alert('오류로 인해 수정되지 않았습니다. 잠시 후 다시 시도해 주세요.');
+        }
+      }
+    });
+
+  }
+  // 대여요청 수락
+  function join(objId){
+
+    if(!confirm('대여요청을 수락하시겠습니까?'))
+      return;
+
+    $.ajax({
+      type:'POST',
+      url:'/mypage/join',
       data:{'objId':objId },
       success: function(response){
         console.log(response);
         var result = response.result;
         if(result == 'success'){
           alert('대여 요청을 수락하였습니다.');
+          location.reload();
         }else{
           alert('오류로 인해 대여 요청이 수락되지 않았습니다. 잠시 후 다시 시도해 주세요.');
         }
@@ -93,17 +197,22 @@
     
   }
 
+  // 대여 요청 거절
   function reject(objId){
+
+    if(!confirm('대여요청을 거부하시겠습니까?'))
+      return;
 
     $.ajax({
       type:'POST',
-      url:'/mypage/{{ name }}/reject',
+      url:'/mypage/reject',
       data:{'objId':objId },
       success: function(response){
         console.log(response);
         var result = response.result;
         if(result == 'success'){
           alert('대여 요청을 거절하였습니다.');
+          location.reload();
         }else{
           alert('오류로 인해 대여 요청이 거절되지 않았습니다. 잠시 후 다시 시도해 주세요.');
         }
@@ -117,24 +226,66 @@
 <body>
   <div class="w-full flex text-center">
     <div class="w-1/2">
-      <div><p>등록된 도서</p></div>
+      <div class="mypage-sub-menu"><p >등록된 도서</p></div>
       <ul>
         {% for item in book %}
-        <li data-modal-target="static-modal" data-modal-toggle="static-modal" ><span onclick="openPop('{{ item['_id'] }}')">{{ item['book_name'] }}</span></li>
+        <div class="card">
+          <div class="card-image">
+            <figure class="image is-4by4">
+              <img src="../static/{{ item['image'] }}" class="card-img-top" style="max-height: 300px">
+            </figure>
+          </div>
+          <div class="card-content">
+              <div class="title">
+                  <p class="title is-5">{{ item['title'] }}</p>
+              </div>
+              <div class="content">
+                {{ item['text'] }}
+              </div>
+              <div class="date">
+                  <time datetime="2016-1-1">등록일:   {{ (item['image'] | replace('image-','') )[0:19]  }}</time>
+              </div>
+          </div>
+          <footer class="card-footer">
+              <a href="javascript:openPop('{{ item['_id'] }}')" class="card-footer-item" data-modal-target="detail-modal" data-modal-toggle="detail-modal"  >수정하기</a>
+          </footer>
+        </div>
         {% endfor %}
       </ul>
     </div>
     <div class="w-1/2">
-      <div><p>대여 요청</p></div>
+      <div class="mypage-sub-menu"><p>대여 요청</p></div>
       <ul>
         {% for item in rental %}
           {% for rTemp in item %}
-          <li data-modal-target="static-modal" data-modal-toggle="static-modal" ><span onclick="openRentalPop('{{ rTemp['_id'] }}')">{{ rTemp['book_name'] }}</span></li>
+          <div class="card">
+            <div class="card-image">
+              <figure class="image is-4by4">
+                <img src="../static/{{ rTemp['image'] }}" class="card-img-top" style="max-height: 300px">
+              </figure>
+            </div>
+            <div class="card-content">
+                <div class="title">
+                    <p class="title is-5">{{ rTemp['title'] }}</p>
+                </div>
+                <div class="content">
+                  {{ rTemp['text'] }}
+                </div>
+                <div class="date">
+                    <time datetime="2016-1-1">등록일:   {{ (rTemp['image'] | replace('image-','') )[0:19]  }}</time>
+                </div>
+            </div>
+            <footer class="card-footer">
+                <a href="javascript:openRentalPop('{{ rTemp['_id'] }}')" class="card-footer-item" data-modal-target="static-modal" data-modal-toggle="static-modal"  >요청보기</a>
+            </footer>
+          </div>
           {% endfor %}
         {% endfor %}
       </ul>
     </div>
   </div>
+
+
 
 
 
@@ -148,7 +299,7 @@
             <div class="flex relative items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
                 <div class="w-full flex items-center justify-between " >
                   <div class="w-1/2">
-                    <img name="bookImg" src="https://img.freepik.com/premium-psd/tomato-sauce-in-a-bowl-isolated-on-alpha-layer_253984-7534.jpg?w=1060">
+                    <img name="bookImg" src="">
                   </div>
                   <div class="w-1/2 px-5 ">
                     상태 : <span id="status"></span>
@@ -180,6 +331,42 @@
     </div>
 </div>
 
+
+<!-- Main modal -->
+<div id="detail-modal" data-modal-backdrop="static" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+  <div class="relative p-4 w-full max-w-2xl max-h-full">
+      <!-- Modal content -->
+      <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+          <!-- Modal header -->
+          <div class="flex relative items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+              <div class="w-full flex items-center justify-between " >
+                <div class="w-1/2">
+                  <img name="editBookImg" src="">
+                </div>
+                <div class="w-1/2 px-5 ">
+                  상태 : <span id="status"></span>
+                  <input name="editTitle" class="px-3 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md sm:text-sm focus:ring-1 invalid:border-pink-500 invalid:text-pink-600 focus:invalid:border-pink-500 focus:invalid:ring-pink-500 disabled:shadow-none">
+                  <textarea name="editContent" class="mt-1 px-3 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md sm:text-sm focus:ring-1"></textarea>
+                </div>
+              </div>
+              <button type="button" class="absolute top-0 right-0 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="detail-modal">
+                  <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                      <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                  </svg>
+                  <span class="sr-only">Close modal</span>
+              </button>
+          </div>
+          <!-- Modal body -->
+          <div class="p-4 md:p-5 space-y-4 w-full flex" >
+              <div class="flex justify-evenly w-full mt-0 items-center pr-5" style="margin-top: 0!important; ">
+                <!-- <button class="mt-1 inline-flex items-center px-4 py-2 font-semibold leading-6 text-sm shadow rounded-md text-white bg-indigo-500">채팅하기</button><br> -->
+                <button id="delBtn" class="w-2/5 mt-1 items-center px-4 py-2 font-semibold leading-10 text-sm shadow rounded-md text-white bg-indigo-500" onclick="join()">도서 삭제</button><br>
+                <button id="editBtn" class="w-2/5 mt-1 items-center px-4 py-2 font-semibold leading-10 text-sm shadow rounded-md text-white bg-indigo-500" onclick="reject()">도서 수정</button>
+              </div>
+          </div>
+      </div>
+  </div>
+</div>
 
 
 </body>

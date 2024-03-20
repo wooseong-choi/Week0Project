@@ -2,7 +2,12 @@
 module.exports = {
   content: ['./templates/*.html'],
   theme: {
-    extend: {},
+    extend: {
+      minWidth: {
+        minW150 : '150px',
+      }
+
+    },
   },
   plugins: [],
 }

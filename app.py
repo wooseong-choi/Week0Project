@@ -31,17 +31,16 @@ def home():
    if not session.get('logged_in'):
       return render_template('login.html')
    else:
-      return render_template('index.html')
+      return redirect('/books/list')
    
    # db.users.insert_one({'id':'asd','password':'123','name':'asd'})
    # db.books.insert_one({'book_name':'asd','book_comment':'asd','book_image':'asd','user_row_id':'asd'})
    # db.rental.insert_one({'rental_place':'교육관 1층','rental_period':'대여 기간','rental_time':'약속 시간','user_row_id':'test', 'book_row_id':'testbook'})
 
-
 @app.route('/books/list', methods=['GET'])
 def show_books():
     all_books = list(db.book.find({}, {'_id': False}))
-    return jsonify({'result': 'success', 'all_books': all_books})
+    return render_template('list.html',all_books=all_books)
 
 @app.route('/books/upload', methods=['GET'])
 def goUpload():
@@ -52,6 +51,9 @@ def upload():
     title_receive = request.form["title_give"]
     text_receive = request.form["text_give"]
     image = request.files["image_give"]
+
+    userId = session['user_id']
+
     # static 폴더에 저장될 파일 이름 생성하기 
     today = datetime.now()
     mytime = today.strftime('%Y-%m-%d-%H-%M-%S')
@@ -61,19 +63,19 @@ def upload():
     # static 폴더에 저장
     save_to = f'static/{filename}.{extension}'
     image.save(save_to)
-
+    
     # DB에 저장
     doc = {
         'title': title_receive,
         'text': text_receive,
-        'image': f'{filename}.{extension}'
+        'image': f'{filename}.{extension}',
+        'user_id':userId
     }
     db.book.insert_one(doc)
 
     return jsonify({'msg': '업로드 완료!'})
 
 @app.route('/mypage', methods=['GET'])
-
 def mypage():
    
    
@@ -87,7 +89,7 @@ def mypage():
 
    if len(users) > 0 :
 
-      book = list( db.books.find({'user_id': userId} ) )
+      book = list( db.book.find({'user_id': userId} ) )
 
       rental = []
 
@@ -97,15 +99,12 @@ def mypage():
          rental.append(tempRental)
       
 
-      #print('rental : ' , rental)
-      #print('book : ' , book)
-
       return render_template('mypage.html', name=userId, book=book,rental=rental)
    else  :
       return render_template('mypage.html', error='No user')   
 
-@app.route('/mypage/<userId>/rental', methods=['POST'])
-def mypageRental(userId):
+@app.route('/mypage/rental', methods=['POST'])
+def mypageRental():
    id = request.form['objId']
 
    rental = list( db.rental.find({'_id': ObjectId(id)} ) )
@@ -114,7 +113,7 @@ def mypageRental(userId):
       i['_id'] = str(i['_id'])
 
 
-   book = list( db.books.find({'_id':ObjectId(rental[0]['book_row_id'])}) ) 
+   book = list( db.book.find({'_id':ObjectId(rental[0]['book_row_id'])}) ) 
 
    for i in book :
       i['_id'] = str(i['_id'])
@@ -122,11 +121,11 @@ def mypageRental(userId):
 
    return jsonify({'result': book, 'rental':rental})
 
-@app.route('/mypage/<userId>/bookEdit', methods=['POST'])
-def bookEdit(userId):
+@app.route('/mypage/bookEdit', methods=['POST'])
+def bookEdit():
    id = request.form['objId']
 
-   books = list( db.books.find({'_id': ObjectId(id)} ) )
+   books = list( db.book.find({'_id': ObjectId(id)} ) )
 
    for i in books :
       i['_id'] = str(i['_id'])
@@ -137,8 +136,8 @@ def bookEdit(userId):
   
 
 
-@app.route('/mypage/<userId>/join', methods=['POST'])
-def join(userId):
+@app.route('/mypage/join', methods=['POST'])
+def join():
    id = request.form['objId']
    result = db.rental.update_one( {'_id':ObjectId(id)}, {'$set': {'rental_status':'수락'} } )
    print(result)
@@ -146,8 +145,8 @@ def join(userId):
       return jsonify({'result': 'success'})
    else:
       return jsonify({'result': 'failure'})    
-@app.route('/mypage/<userId>/reject', methods=['POST'])
-def reject(userId):
+@app.route('/mypage/reject', methods=['POST'])
+def reject():
    id = request.form['objId']
    result = db.rental.update_one( {'_id':ObjectId(id)}, {'$set': {'rental_status':'거절'} } )
    print(result)
@@ -157,44 +156,36 @@ def reject(userId):
       return jsonify({'result': 'failure'})    
 
 
+
+@app.route('/mypage/editBook', methods=['POST'])
+def editBook():
+   id = request.form['objId']
+   title = request.form['title']
+   content = request.form['content']
+   result = db.book.update_one( {'_id':ObjectId(id)}, {'$set': {'title':title,'text':content} } )
+   print(result)
+   if result.modified_count > 0:
+      return jsonify({'result': 'success'})
+   else:
+      return jsonify({'result': 'failure'})    
+   
+@app.route('/mypage/delBook', methods=['POST'])
+def delBook():
+   id = request.form['objId']
+   result = db.book.delete_one( {'_id':ObjectId(id) } )
+   print(result)
+   if result.deleted_count > 0:
+      return jsonify({'result': 'success'})
+   else:
+      return jsonify({'result': 'failure'})   
+
 #'Logged' #session.clear()
-    
-
-# 토큰이 있는지 확인하고 인증을 처리하는 데코레이터
-def token_required(func):
-    @wraps(func)
-    def decorated(*args, **kwargs):
-        token = request.args.get('token')
-        if not token:
-            return jsonify({'error' : 'Token is missing!'}), 401
-        try:
-            payload = jwt.decode(token, app.config['SECRET_KEY'])
-        except jwt.ExpiredSignatureError:
-            return jsonify({'error' : 'Token is expired!'}), 401
-        except jwt.InvalidTokenError:
-            return jsonify({'error' : 'Invalid Token!'}), 401
-        return func(*args, **kwargs)
-    return decorated
-
-
-
-
-
-# 공개 페이지
-@app.route('/public')
-def public():
-    return 'For Public'
-
-# 인증된 페이지
-@app.route('/auth')
-def auth():
-    return 'JWT is verified. Welcome dashboard'
-
 #로그아웃
 #@app.route('/', methods=['POST'])
 @app.route('/logout', methods=['POST'])
 def logout():
     session['logged_in'] = False
+    session.pop('user_id',None)
     return render_template('login.html') #session.clear(), 
 
 

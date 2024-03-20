@@ -2,12 +2,8 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   <!-- Bootstrap CSS -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
-    integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
 
   <!-- JS -->
   <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"
@@ -16,6 +12,7 @@
     integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
     crossorigin="anonymous"></script>
 
+    {% include 'header.html' %}
   <title>모의 시험</title>
 
   <!-- style -->
@@ -67,10 +64,10 @@
         processData: false,
         success: function (response) {
             alert(response["msg"]);
-            window.location.reload();
+            window.location.replace('/books/list');
         }
     });
-  } 
+  }
 
     
 </script>
@@ -82,10 +79,9 @@
       <form>
         
           <div class="font-[sans-serif] max-w-md mx-auto">
-            <label class="text-sm text-black mb-2 block" for="input-image">Upload file</label>
-            <input id="input-image" name="chooseFile" accept="image/*" onchange="loadFile(this)" type="file"
-              class="w-full text-black text-sm bg-white border file:cursor-pointer cursor-pointer file:border-0 file:py-2.5 file:px-4 file:bg-gray-100 file:hover:bg-gray-200 file:text-black rounded" />
-            <p class="text-xs text-gray-400 mt-2">PNG, JPG SVG, WEBP, and GIF are Allowed.</p>
+            <input id="input-image" name="chooseFile" accept=".png, .jpg" onchange="loadFile(this)" type="file"
+              class=" w-full text-black text-sm bg-white border file:cursor-pointer cursor-pointer file:border-0 file:py-2.5 file:px-4 file:bg-gray-100 file:hover:bg-gray-200 file:text-black rounded" />
+            <p class="text-xs text-gray-400 mt-2">PNG, JPG are Allowed.</p>
           </div>
         
         

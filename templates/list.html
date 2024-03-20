@@ -1,12 +1,9 @@
 <!DOCTYPE html>
 <html lang="ko">
     <head>
-        <meta charset="UTF-8"/>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        {% include 'header.html' %}
         <title>Jungle Books</title>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css"/>
-        <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+        
         <style>
             .center {
                 text-align: center;
@@ -25,9 +22,22 @@
                 text-decoration: underline;
             }
 
-            .card {
-                margin-bottom: 15px;
+            #book-box {
+                width: 800px;
             }
+            .card {
+                /* margin-bottom: 35px; */
+                width: 25rem;
+                display: inline-block;
+                
+                margin: 10px 10px 10px 10px;
+            }
+
+            .sorter-box {
+                width: 500px;
+            }
+
+            
         </style>
         <script>
             $(document).ready(function () {
@@ -70,49 +80,6 @@
             });
         }
 
-            // function showBooks() {
-            //     $.ajax({
-            //         type: 'GET',
-            //         url: '/books/list',
-            //         data: {},
-            //         success: function (response) {
-            //             if (response['result'] == 'success') {
-            //                 $("#book-box").empty()
-            //                 let all_books = response['all_books'];
-            //                 for (i=0; i<all_books.length; i++) {
-            //                     let row = all_books[i]
-            //                     let title = row['title']
-            //                     // let content = row['book_comment']
-            //                     let image = row['image']
-
-            //                     let temp_html = `<div class="card">
-            //                         <div class="card-content">
-            //                             <div class="media">
-            //                                 <div class="media-left">
-            //                                     <figure class="image is-48x48">
-            //                                         <img src="${image}" alt="Placeholder image">
-            //                                     </figure>
-            //                                 </div>
-            //                                 <div class="media-content">
-            //                                     <p target="_blank" class="book-name title is-4">${title}</p>
-            //                                 </div>
-            //                             </div>
-            //                         </div>
-            //                         <footer class="card-footer">
-            //                             <a href="#" onclick="likeBook('${title}')" class="card-footer-item has-text-info">
-            //                                 대여하기
-            //                                 <span class="icon">
-            //                                     <i class="fas fa-thumbs-up"></i>
-            //                                 </span>
-            //                             </a>                                       
-            //                         </footer>
-            //                     </div>`
-            //                     $("#book-box").append(temp_html)
-            //                 }
-            //             }
-            //         }
-            //     });
-            // }
 
             function likeBook(title) {
                 $.ajax({
@@ -133,21 +100,32 @@
         </script>
     </head>
     <body>
-        <section class="hero is-info">
-            <div class="hero-body">
-                <div class="container center">
-                    <h1 class="title">
-                        Jungle Books 📖
-                    </h1>
-                    <p></p>
-                    <h2 class="subtitle">
-                        정보 공유의 즐거움
-                    </h2>
+        <div class="book-column" id="book-box">
+            {% for item in all_books %}
+            <div class = "card">
+                <div class="card-image">
+                  <figure class="image is-4by4">
+                    <img src="../static/{{ item['image'] }}" class="card-img-top" style="max-height: 300px">
+                  </figure>
                 </div>
+                <div class="card-content">
+                    <div class="title">
+                        <p class="title is-5">{{ item['title'] }}</p>
+                    </div>
+                    <div class="content">
+                        {{ item['text'] }}
+                    </div>
+                    <div class="date">
+                        <time datetime="2016-1-1">등록일: 11:09 PM - 1 Jan 2016</time>
+                    </div>
+                </div>
+                <footer class="card-footer">
+                    <a href="#" class="card-footer-item">대여하기</a>
+                </footer>
             </div>
-        </section>
-        <div class="book-list" id="book-box">
-            
+            {% endfor %}
         </div>
+
+        
     </body>
 </html>
