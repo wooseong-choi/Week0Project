@@ -217,10 +217,10 @@ def login():
    if result is not None:  # 일치한다면
       session['logged_in'] = True
       session['user_id'] = username_receive
-      token = jwt.encode({
-            'user': request.form['user_id'],
-            'expiration': str(datetime.utcnow() + timedelta(seconds=10))}, app.config['SECRET_KEY'])
-      return jsonify({'result':'success','token': token})    
+      # token = jwt.encode({
+      #       'user': request.form['user_id'],
+      #       'expiration': str(datetime.utcnow() + timedelta(seconds=10))}, app.config['SECRET_KEY'])
+      return jsonify({'result':'success'})    
    else:
       return jsonify({'result': 'fail', 'msg': '아이디/비밀번호가 일치하지 않습니다.'})
 

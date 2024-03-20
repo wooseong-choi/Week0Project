@@ -31,7 +31,7 @@
             if (response['result'] == 'success') 
             {
 //                $.cookie('mytoken', response['token'], {path: '/'});
-                document.cookie = 'mytoken='+response['token']+'; path=/;';
+                // document.cookie = 'mytoken='+response['token']+'; path=/;';
                 window.location.replace("/");
             } else {
                 alert(response['msg']);
