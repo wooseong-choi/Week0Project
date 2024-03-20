@@ -120,6 +120,27 @@ def bookEdit(userId):
    return jsonify({'result': books})
   
 
+
+@app.route('/mypage/<userId>/join', methods=['POST'])
+def join(userId):
+   id = request.form['objId']
+   result = db.rental.update_one( {'_id':ObjectId(id)}, {'$set': {'rental_status':'수락'} } )
+   print(result)
+   if result.modified_count > 0:
+      return jsonify({'result': 'success'})
+   else:
+      return jsonify({'result': 'failure'})    
+@app.route('/mypage/<userId>/reject', methods=['POST'])
+def reject(userId):
+   id = request.form['objId']
+   result = db.rental.update_one( {'_id':ObjectId(id)}, {'$set': {'rental_status':'거절'} } )
+   print(result)
+   if result.modified_count > 0:
+      return jsonify({'result': 'success'})
+   else:
+      return jsonify({'result': 'failure'})    
+
+
 #'Logged' #session.clear()
     
 
@@ -138,6 +159,8 @@ def token_required(func):
             return jsonify({'error' : 'Invalid Token!'}), 401
         return func(*args, **kwargs)
     return decorated
+
+
 
 
 
