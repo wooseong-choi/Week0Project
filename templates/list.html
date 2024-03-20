@@ -70,49 +70,6 @@
             });
         }
 
-            // function showBooks() {
-            //     $.ajax({
-            //         type: 'GET',
-            //         url: '/books/list',
-            //         data: {},
-            //         success: function (response) {
-            //             if (response['result'] == 'success') {
-            //                 $("#book-box").empty()
-            //                 let all_books = response['all_books'];
-            //                 for (i=0; i<all_books.length; i++) {
-            //                     let row = all_books[i]
-            //                     let title = row['title']
-            //                     // let content = row['book_comment']
-            //                     let image = row['image']
-
-            //                     let temp_html = `<div class="card">
-            //                         <div class="card-content">
-            //                             <div class="media">
-            //                                 <div class="media-left">
-            //                                     <figure class="image is-48x48">
-            //                                         <img src="${image}" alt="Placeholder image">
-            //                                     </figure>
-            //                                 </div>
-            //                                 <div class="media-content">
-            //                                     <p target="_blank" class="book-name title is-4">${title}</p>
-            //                                 </div>
-            //                             </div>
-            //                         </div>
-            //                         <footer class="card-footer">
-            //                             <a href="#" onclick="likeBook('${title}')" class="card-footer-item has-text-info">
-            //                                 대여하기
-            //                                 <span class="icon">
-            //                                     <i class="fas fa-thumbs-up"></i>
-            //                                 </span>
-            //                             </a>                                       
-            //                         </footer>
-            //                     </div>`
-            //                     $("#book-box").append(temp_html)
-            //                 }
-            //             }
-            //         }
-            //     });
-            // }
 
             function likeBook(title) {
                 $.ajax({
