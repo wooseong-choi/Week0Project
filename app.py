@@ -1,6 +1,5 @@
 from pymongo import MongoClient
 import jwt
-import datetime
 import hashlib
 
 from datetime import datetime, timedelta
@@ -11,18 +10,24 @@ from bson import ObjectId
 
 from flask.json.provider import JSONProvider
 
+from functools import wraps
+
+import hashlib
+
 app = Flask(__name__)
 
 client = MongoClient('localhost', 27017)  # mongoDB는 27017 포트로 돌아갑니다.
-db = client.week0Project                        # 'jungle'라는 이름의 db를 만듭니다.
+db = client.books                        # 'jungle'라는 이름의 db를 만듭니다.
 
 @app.route('/')
 def home():
-
+   if not session.get('logged_in'):
+      return render_template('login.html')
+   else:
+      return render_template('index.html')
    #db.users.insert_one({'id':'ghkdgo868','password':'dddd','name':'최우성'})
    #db.books.insert_one({'book_name':'신비한 동물사전','book_comment':'이 책은 대단합니다.','book_image':'test.jpg','user_row_id':'test'})
    #db.rental.insert_one({'rental_place':'교육관 1층','rental_period':'대여 기간','rental_time':'약속 시간','user_row_id':'test', 'book_row_id':'testbook'})
-   return render_template('index.html')
 
 @app.route('/books/list', methods=['GET'])
 def show_books():
@@ -112,37 +117,91 @@ def bookEdit(userId):
 
 
 
-   return jsonify({'result': books}) 
+   return jsonify({'result': books})
+  
 
-@app.route('/mypage/<userId>/join', methods=['POST'])
-def join(userId):
-   id = request.form['objId']
+#'Logged' #session.clear()
+    
 
-   result = db.rental.update_one( {'_id':ObjectId(id)}, {'$set': {'rental_status':'수락'} } )
-
-   print(result)
-
-   if result.modified_count > 0:
-      return jsonify({'result': 'success'})
-   else:
-      return jsonify({'result': 'failure'})    
-
-@app.route('/mypage/<userId>/reject', methods=['POST'])
-def reject(userId):
-   id = request.form['objId']
-
-   result = db.rental.update_one( {'_id':ObjectId(id)}, {'$set': {'rental_status':'거절'} } )
-
-   print(result)
-
-   if result.modified_count > 0:
-      return jsonify({'result': 'success'})
-   else:
-      return jsonify({'result': 'failure'})    
+# 토큰이 있는지 확인하고 인증을 처리하는 데코레이터
+def token_required(func):
+    @wraps(func)
+    def decorated(*args, **kwargs):
+        token = request.args.get('token')
+        if not token:
+            return jsonify({'error' : 'Token is missing!'}), 401
+        try:
+            payload = jwt.decode(token, app.config['SECRET_KEY'])
+        except jwt.ExpiredSignatureError:
+            return jsonify({'error' : 'Token is expired!'}), 401
+        except jwt.InvalidTokenError:
+            return jsonify({'error' : 'Invalid Token!'}), 401
+        return func(*args, **kwargs)
+    return decorated
 
 
 
+# 공개 페이지
+@app.route('/public')
+def public():
+    return 'For Public'
 
+# 인증된 페이지
+@app.route('/auth')
+@token_required
+def auth():
+    return 'JWT is verified. Welcome dashboard'
+
+#로그아웃
+#@app.route('/', methods=['POST'])
+@app.route('/logout', methods=['POST'])
+def logout():
+    session['logged_in'] = False
+    return render_template('login.html') #session.clear(), 
+
+
+@app.route('/register', methods=['POST'])
+def register():
+    return render_template('register.html') 
+
+
+@app.route('/login', methods=['POST'])
+def login():
+    username_receive = request.form['username']
+    password_receive = request.form['password']  # 유저가 아이디 pw 입력
+
+    pw_hash = hashlib.sha256(password_receive.encode('utf-8')).hexdigest()  # 유저가 입력한 pw를 해쉬화
+    result = db.users.find_one({'username': username_receive, 'password': pw_hash}) 
+    # 아이디와 유저가 입력한 해쉬화된 pw가 DB에 저장되어 있는 해쉬화된 pw와 일치하는지 확인 
+
+    if result is not None:  # 일치한다면
+        session['logged_in'] = True
+        token = jwt.encode({
+            'user': request.form['username'],
+            'expiration': str(datetime.utcnow() + timedelta(seconds=10))}, app.config['SECRET_KEY'])
+        return jsonify({'token': token})    
+    
+    else:
+        return jsonify({'result': 'fail', 'msg': '아이디/비밀번호가 일치하지 않습니다.'})
+    
+
+# 회원가입
+@app.route('/sign_up/save', methods=['POST'])
+def sign_up():
+    username_receive = request.form['username_give']
+    password_receive = request.form['password_give']
+    nickname_receive = request.form['nickname_give']
+    password_hash = hashlib.sha256(password_receive.encode('utf-8')).hexdigest() # password 해쉬화 함수
+    doc = {
+        "username": username_receive,  # 아이디
+        "password": password_hash,  # 비밀번호
+        "nickname": nickname_receive,  # 닉네임
+        "profile_pic": "",  # 프로필 사진 파일 이름
+        "profile_pic_real": "profile_pics/profile_placeholder.png",  # 프로필 사진 기본 이미지
+        "profile_info": ""  # 프로필 한 마디
+    }
+    db.users.insert_one(doc) # 유저가 입력한 아이디 pw 닉네임을 DB에 저장
+    return jsonify({'result': 'success'})
 
 
 if __name__ == '__main__':  
