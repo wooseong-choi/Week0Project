@@ -57,12 +57,17 @@
             }
 
             .card-content {
-                height: 250px;
+                height: 210px;
 
             }
 
             .sorter-box {
                 width: 500px;
+            }
+            
+            .card-img-top {
+                width: 300px;
+                height: 300px;
             }
 
             
@@ -176,7 +181,7 @@
                         {{ item['text'] }}
                     </div>
                     <div class="date">
-                        <time datetime="2016-1-1">등록일: 11:09 PM - 1 Jan 2016</time>
+                        <time datetime="2016-1-1">등록일:   {{ (item['image'] | replace('image-','') )[0:19]  }}</time>
                     </div>
                 </div>
                 <footer class="card-footer">
