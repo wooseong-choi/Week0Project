@@ -99,6 +99,7 @@ def mypage():
          tempRental = list( db.rental.find( {'book_row_id': str(tempBook['_id'])  } ) )
          rental.append(tempRental)
       
+      print(rental)
 
       return render_template('mypage.html', name=userId, book=book,rental=rental)
    else  :
@@ -181,7 +182,7 @@ def delBook():
       return jsonify({'result': 'failure'})   
 
 
-@app.route( '/mypage/reqBookRental' , method=['POST'] )
+@app.route('/mypage/reqBookRental' , methods=['POST'] )
 def reqBookRental():
    if session['logged_in'] == False : 
       return render_template('mypage.html', error='No session')   
@@ -192,24 +193,28 @@ def reqBookRental():
 
    book = db.book.find_one({'_id':ObjectId(bookId)})
 
+   rentalData = list(db.rental.find( {'book_row_id':bookId, 'rental_status': { '$in': [ '대여 신청','대여 수락' ] } } ))
+   
+   # 이미 신청중인 사람이 있을 때
+   if len(rentalData) > 0:
+      return jsonify({'result':'already'})
+   
+
    rental = {
-            'rental_place': title,
-            'rental_period': open_year,
-            'rental_time': open_month,
-            'book_row_id': viewers,
-            'book_name': poster_url,
-            'take_user_id': info_url,
-            'user_id': likes,
+            'rental_place': request.form['rental_place'],
+            'rental_period': request.form['rental_period'],
+            'rental_time': request.form['rental_time'],
+            'book_row_id': bookId,
+            'book_name': book['title'],
+            'take_user_id': reqUserId,
+            'user_id': book['user_id'],
             'rental_status': '대여 신청'
-        }
+         }
 
-   db.rental.insert_one(rental)
-
-
-
-   if result.modified_count > 0:
+   try:
+      db.rental.insert_one(rental)
       return jsonify({'result': 'success'})
-   else:
+   except:
       return jsonify({'result': 'failure'})    
 
 
