@@ -181,7 +181,7 @@ def delBook():
       return jsonify({'result': 'failure'})   
 
 
-@app.route( '/mypage/reqBookRental' , method=['POST'] )
+@app.route('/mypage/reqBookRental' , methods=['POST'] )
 def reqBookRental():
    if session['logged_in'] == False : 
       return render_template('mypage.html', error='No session')   
