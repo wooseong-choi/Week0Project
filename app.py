@@ -107,7 +107,7 @@ def mypage():
       return render_template('mypage.html', error='No user')   
 
 @app.route('/mypage/rental', methods=['POST'])
-def mypageRental(userId):
+def mypageRental():
    id = request.form['objId']
 
    rental = list( db.rental.find({'_id': ObjectId(id)} ) )
@@ -116,7 +116,7 @@ def mypageRental(userId):
       i['_id'] = str(i['_id'])
 
 
-   book = list( db.books.find({'_id':ObjectId(rental[0]['book_row_id'])}) ) 
+   book = list( db.book.find({'_id':ObjectId(rental[0]['book_row_id'])}) ) 
 
    for i in book :
       i['_id'] = str(i['_id'])
@@ -125,10 +125,10 @@ def mypageRental(userId):
    return jsonify({'result': book, 'rental':rental})
 
 @app.route('/mypage/bookEdit', methods=['POST'])
-def bookEdit(userId):
+def bookEdit():
    id = request.form['objId']
 
-   books = list( db.books.find({'_id': ObjectId(id)} ) )
+   books = list( db.book.find({'_id': ObjectId(id)} ) )
 
    for i in books :
       i['_id'] = str(i['_id'])
@@ -140,7 +140,7 @@ def bookEdit(userId):
 
 
 @app.route('/mypage/join', methods=['POST'])
-def join(userId):
+def join():
    id = request.form['objId']
    result = db.rental.update_one( {'_id':ObjectId(id)}, {'$set': {'rental_status':'수락'} } )
    print(result)
@@ -149,7 +149,7 @@ def join(userId):
    else:
       return jsonify({'result': 'failure'})    
 @app.route('/mypage/reject', methods=['POST'])
-def reject(userId):
+def reject():
    id = request.form['objId']
    result = db.rental.update_one( {'_id':ObjectId(id)}, {'$set': {'rental_status':'거절'} } )
    print(result)
@@ -158,6 +158,29 @@ def reject(userId):
    else:
       return jsonify({'result': 'failure'})    
 
+
+
+@app.route('/mypage/editBook', methods=['POST'])
+def editBook():
+   id = request.form['objId']
+   title = request.form['title']
+   content = request.form['content']
+   result = db.book.update_one( {'_id':ObjectId(id)}, {'$set': {'title':title,'text':content} } )
+   print(result)
+   if result.modified_count > 0:
+      return jsonify({'result': 'success'})
+   else:
+      return jsonify({'result': 'failure'})    
+   
+@app.route('/mypage/delBook', methods=['POST'])
+def delBook():
+   id = request.form['objId']
+   result = db.book.delete_one( {'_id':ObjectId(id) } )
+   print(result)
+   if result.deleted_count > 0:
+      return jsonify({'result': 'success'})
+   else:
+      return jsonify({'result': 'failure'})   
 
 #'Logged' #session.clear()
 #로그아웃
