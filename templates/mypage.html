@@ -129,7 +129,7 @@
       <ul>
         {% for item in rental %}
           {% for rTemp in item %}
-        <li data-modal-target="static-modal" data-modal-toggle="static-modal" ><span onclick="openRentalPop('{{ rTemp['_id'] }}')">{{ rTemp['book_name'] }}</span></li>
+          <li data-modal-target="static-modal" data-modal-toggle="static-modal" ><span onclick="openRentalPop('{{ rTemp['_id'] }}')">{{ rTemp['book_name'] }}</span></li>
           {% endfor %}
         {% endfor %}
       </ul>
@@ -184,8 +184,4 @@
 
 </body>
 
-<<<<<<< HEAD
-=======
-
->>>>>>> 1d22649a98e0c4b5b7e4ee01463d4cc771bb8b28
 </html>
