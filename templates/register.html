@@ -8,6 +8,121 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
 </head>
+
+<script>
+    let duplicateChecked = false;
+    let samePass = false;
+
+    function checkDuplicate() {
+        let username = $("#input-username").val();  
+        $.ajax({
+            type: "POST",
+            url: "/check_duplicate_username", 
+            data: { username: username },
+            success: function(response) {
+
+                if (response.exists) {
+                    alert("이미 존재하는 아이디입니다.");
+                } else {
+                    duplicateChecked = true;
+                    alert("사용 가능한 아이디입니다.");
+                }
+            }
+        });
+    }
+
+    function checkpass() {
+        //
+        let password = $("#input-password").val()
+        let password2 = $("#input-password2").val()
+
+        if (password != password2) 
+        {
+            alert("패스워드 다름");
+        }else{
+            alert("확인");
+            samePass = true;
+        }
+
+    }
+
+    function NoEmpty() {
+        let username = $("#input-username").val()
+        let nickname = $("#input-nickname").val()
+        let password = $("#input-password").val()
+        let password2 = $("#input-password2").val()
+
+        if (username & nickname & password & password2 == "") {
+            alert("빈 공백입니다.");
+        } else 
+        if (username == "") {
+            alert("write your username");
+        } else 
+        if (nickname == "") {
+            alert("write your nickname");
+        } else 
+        if (password & password2 == "") {
+            alert("write your password");
+        }
+    }
+
+    function register() {
+    let username = $("#input-username").val()
+    let nickname = $("#input-nickname").val()
+    let password = $("#input-password").val()
+    let password2 = $("#input-password2").val()
+    console.log(username, nickname, password, password2)
+  	
+
+    if (username & nickname & password & password2 == "") {
+
+        alert("빈 공백입니다.");
+            return;
+        } else 
+        if (username == "") {
+
+            alert("write your username");
+            return;
+        } else 
+        if (nickname == "") {
+
+            alert("write your nickname");
+            return;
+        } else 
+        if (password & password2 == "") {
+
+            alert("write your password");
+            return;
+        } else 
+        
+        if (!duplicateChecked) {
+            alert("중복 확인을 먼저 해주세요.");
+            return;
+    } else 
+    if (samePass) {
+
+        alert("패스워드 확인.");
+        return;
+    } else {
+        alert("완료");
+    }
+
+    $.ajax({
+        type: "POST",
+        url: "/sign_up/save",
+        data: {
+            username_give: username,
+            password_give: password,
+            nickname_give: nickname
+        },
+        success: function (response) {
+            alert("회원가입을 축하드립니다!")
+            window.location.replace("/")
+        }
+    });
+}
+</script>
+
 <body>
 
     <div>
@@ -15,6 +130,9 @@
             <label for="input-username">-userid</label>
             <input id="input-username" class="form-control" placeholder="">
         </div>
+
+        <button type="button" class="btn btn-primary" onclick="checkDuplicate()">Username 중복확인</button>
+
         <div class="form-group">
             <label for="input-nickname">-name</label>
             <input id="input-nickname" class="form-control" placeholder="">
@@ -29,6 +147,8 @@
             <label for="input-password2">-password2</label>
             <input type="password" id="input-password2" class="form-control" placeholder="">
         </div>
+
+        <button type="button" class="btn btn-primary" onclick="checkpass()">패스워드 확인</button>
 
 
         <button type="button" class="btn btn-primary" onclick="register()">등록 저장</button>

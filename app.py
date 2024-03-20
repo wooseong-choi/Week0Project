@@ -26,9 +26,6 @@ app.config['SECRET_KEY'] = 'f1fb0b3154444c53b7aa815e013f7f4f'
 client = MongoClient('localhost', 27017)  # mongoDB는 27017 포트로 돌아갑니다.
 db = client.week0Project                        # 'jungle'라는 이름의 db를 만듭니다.
 
-app.config['SECRET_KEY'] = 'f1fb0b3154444c53b7aa815e013f7f4f'
-
-
 @app.route('/')
 def home():
    if not session.get('logged_in'):
@@ -211,18 +208,19 @@ def login():
     username_receive = request.form['user_id']
     password_receive = request.form['password']  # 유저가 아이디 pw 입력
 
-   #  if username_receive == "":
-   #     flash('아이디를 입력해주세요','err')
-   #     return redirect(url_for('login'))
-
     pw_hash = hashlib.sha256(password_receive.encode('utf-8')).hexdigest()  # 유저가 입력한 pw를 해쉬화
     result = db.users.find_one({'user_id': username_receive, 'password': pw_hash}) 
     # 아이디와 유저가 입력한 해쉬화된 pw가 DB에 저장되어 있는 해쉬화된 pw와 일치하는지 확인 
 
-    if username_receive == "":
-       return jsonify({'result': 'fail', 'msg': '아이디/비밀번호가 일치하지 않습니다.'})
-    if password_receive == "":
-       return jsonify({'result': 'fail', 'msg': '아이디/비밀번호가 일치하지 않습니다.'})
+    id_mac = db.users.find_one({'user_id': username_receive})
+
+   #  if (username_receive == id_mac):
+   #     return None
+
+   #  if username_receive == "":
+   #     return jsonify({'result': 'fail', 'msg': '아이디/비밀번호가 일치하지 않습니다.'})
+   #  if password_receive == "":
+   #     return jsonify({'result': 'fail', 'msg': '아이디/비밀번호가 일치하지 않습니다.'})
 
     if result is not None:  # 일치한다면
         session['logged_in'] = True
@@ -240,14 +238,27 @@ def sign_up():
     username_receive = request.form['username_give']
     password_receive = request.form['password_give']
     nickname_receive = request.form['nickname_give']
-    password_hash = hashlib.sha256(password_receive.encode('utf-8')).hexdigest() # password 해쉬화 함수
-    doc = {
-        "user_id": username_receive,  # 아이디
-        "password": password_hash,  # 비밀번호
-        "name": nickname_receive,  # 닉네임
-    }
-    db.users.insert_one(doc) # 유저가 입력한 아이디 pw 닉네임을 DB에 저장
-    return jsonify({'result': 'success'})
+
+    id_mac = db.users.find_one({'user_id': username_receive})
+
+    if id_mac is not None:  # 사용자가 이미 존재하는 경우
+        return jsonify({'result': 'false'})
+    else:                   # 사용자가 존재하지 않는 경우
+        password_hash = hashlib.sha256(password_receive.encode('utf-8')).hexdigest() # password 해쉬화 함수
+        doc = {
+            "user_id": username_receive,  # 아이디
+            "password": password_hash,  # 비밀번호
+            "name": nickname_receive,  # 닉네임
+        }
+        db.users.insert_one(doc) # 유저가 입력한 아이디 pw 닉네임을 DB에 저장    
+        return jsonify({'result': 'success','msg':id_mac})
+
+
+@app.route('/check_duplicate_username', methods=['POST'])
+def check_duplicate_username():
+    username = request.form.get('username')
+    existing_user = db.users.find_one({'user_id': username})
+    return jsonify({'exists': existing_user is not None})
 
 
 if __name__ == '__main__':  
