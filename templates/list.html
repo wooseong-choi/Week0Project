@@ -190,7 +190,14 @@
                     },
                     success: function(response){
                         console.log(response);
-                        var result = response.result[0];
+                        var result = response.result;
+                        if(result == 'already'){
+                            alert('이미 대여 신청된 도서입니다.');
+                        }else if(result == 'success'){
+                            alert('대여 신청되었습니다.');
+                        }else{
+                            alert('대여 신청이 실패했습니다.');
+                        }
                     }
                 });
 
@@ -207,9 +214,9 @@
             {% for item in all_books %}
             <div class = "card">
                 <div class="card-image">
-                  <figure class="image is-4by4">
+                <figure class="image is-4by4">
                     <img src="../static/{{ item['image'] }}" class="card-img-top" style="max-height: 300px">
-                  </figure>
+                </figure>
                 </div>
                 <div class="card-content">
                     <div class="title">
@@ -219,7 +226,7 @@
                         {{ item['text'] }}
                     </div>
                     <div class="date">
-                        <time datetime="2016-1-1">등록일:   {{ (item['image'] | replace('image-','') )[0:19]  }}</time>
+                        <time datetime="2016-1-1">등록일:   {{ (item['image'] | replace('image-','') )[0:10]  }}</time>
                     </div>
                 </div>
                 <footer class="card-footer">
