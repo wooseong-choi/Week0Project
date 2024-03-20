@@ -40,7 +40,10 @@ def home():
 
 @app.route('/books/list', methods=['GET'])
 def show_books():
-   all_books = list(db.book.find({}))
+
+   page = request.args.get('page', 1, type=int)
+   limit = 3
+   all_books = list(db.book.find({}).sort('_id', -1))
    return render_template('list.html', all_books=all_books)
 
 @app.route('/books/upload', methods=['GET'])
