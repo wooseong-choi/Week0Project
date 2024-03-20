@@ -39,8 +39,8 @@ def home():
 
 @app.route('/books/list', methods=['GET'])
 def show_books():
-    all_books = list(db.book.find({}, {'_id': False}))
-    return render_template('list.html',all_books=all_books)
+   all_books = list(db.book.find({}, {'_id': False}))
+   return render_template('list.html',all_books=all_books)
 
 @app.route('/books/upload', methods=['GET'])
 def goUpload():
@@ -48,33 +48,33 @@ def goUpload():
 
 @app.route('/books/upload', methods=['POST'])
 def upload():
-    title_receive = request.form["title_give"]
-    text_receive = request.form["text_give"]
-    print(text_receive)
-    image = request.files["image_give"]
+   title_receive = request.form["title_give"]
+   text_receive = request.form["text_give"]
    
-    userId = session['user_id']
+   image = request.files["image_give"]
+   
+   userId = session['user_id']
 
-    # static 폴더에 저장될 파일 이름 생성하기 
-    today = datetime.now()
-    mytime = today.strftime('%Y-%m-%d-%H-%M-%S')
-    filename = f'image-{mytime}'
-    # 확장자 나누기
-    extension = image.filename.split('.')[-1]
-    # static 폴더에 저장
-    save_to = f'static/{filename}.{extension}'
-    image.save(save_to)
-    
-    # DB에 저장
-    doc = {
-        'title': title_receive,
-        'text': text_receive,
-        'image': f'{filename}.{extension}',
-        'user_id':userId
-    }
-    db.book.insert_one(doc)
+   # static 폴더에 저장될 파일 이름 생성하기 
+   today = datetime.now()
+   mytime = today.strftime('%Y-%m-%d-%H-%M-%S')
+   filename = f'image-{mytime}'
+   # 확장자 나누기
+   extension = image.filename.split('.')[-1]
+   # static 폴더에 저장
+   save_to = f'static/{filename}.{extension}'
+   image.save(save_to)
+   
+   # DB에 저장
+   doc = {
+         'title': title_receive,
+         'text': text_receive,
+         'image': f'{filename}.{extension}',
+         'user_id':userId
+   }
+   db.book.insert_one(doc)
 
-    return jsonify({'msg': '업로드 완료!'})
+   return jsonify({'msg': '업로드 완료!'})
 
 @app.route('/mypage', methods=['GET'])
 def mypage():
@@ -185,20 +185,20 @@ def delBook():
 #@app.route('/', methods=['POST'])
 @app.route('/logout', methods=['POST'])
 def logout():
-    session['logged_in'] = False
-    session.pop('user_id',None)
-    return render_template('login.html') #session.clear(), 
+   session['logged_in'] = False
+   session.pop('user_id',None)
+   return render_template('login.html') #session.clear(), 
 
 
 @app.route('/register', methods=['POST'])
 def register():
-    return render_template('register.html') 
+   return render_template('register.html') 
 
 
 @app.route('/login', methods=['POST'])
 def login():
-    username_receive = request.form['user_id']
-    password_receive = request.form['password']  # 유저가 아이디 pw 입력
+   username_receive = request.form['user_id']
+   password_receive = request.form['password']  # 유저가 아이디 pw 입력
 
     pw_hash = hashlib.sha256(password_receive.encode('utf-8')).hexdigest()  # 유저가 입력한 pw를 해쉬화
     result = db.users.find_one({'user_id': username_receive, 'password': pw_hash}) 
@@ -214,15 +214,15 @@ def login():
    #  if password_receive == "":
    #     return jsonify({'result': 'fail', 'msg': '아이디/비밀번호가 일치하지 않습니다.'})
 
-    if result is not None:  # 일치한다면
-        session['logged_in'] = True
-        session['user_id'] = username_receive
-        token = jwt.encode({
+   if result is not None:  # 일치한다면
+      session['logged_in'] = True
+      session['user_id'] = username_receive
+      token = jwt.encode({
             'user': request.form['user_id'],
             'expiration': str(datetime.utcnow() + timedelta(seconds=10))}, app.config['SECRET_KEY'])
-        return jsonify({'result':'success','token': token})    
-    else:
-        return jsonify({'result': 'fail', 'msg': '아이디/비밀번호가 일치하지 않습니다.'})
+      return jsonify({'result':'success','token': token})    
+   else:
+      return jsonify({'result': 'fail', 'msg': '아이디/비밀번호가 일치하지 않습니다.'})
 
 # 회원가입
 @app.route('/sign_up/save', methods=['POST'])

@@ -78,14 +78,9 @@
     <div class="jumbotron">
       <h1 class="page-title"> 도서 등록 </h1>
       <form>
-        
-          <div class="font-[sans-serif] max-w-md mx-auto">
-            <input id="input-image" name="chooseFile" accept=".png, .jpg" onchange="loadFile(this)" type="file"
-              class=" w-full text-black text-sm bg-white border file:cursor-pointer cursor-pointer file:border-0 file:py-2.5 file:px-4 file:bg-gray-100 file:hover:bg-gray-200 file:text-black rounded" />
-            <p class="text-xs text-gray-400 mt-2">PNG, JPG are Allowed.</p>
-          </div>
-        
-        
+        <div>
+          <input type="file" id="input-image" name="chooseFile" accept="image/*">
+        </div>
         <div>
           <input name="title" id="input-title" placeholder="제목을 입력하세요"></input>
         </div>
@@ -97,10 +92,8 @@
         </div>
       </form>
     </div>
-    <div id="cards-list" class="card-columns">
-      
-    </div>
   </div>
+
 </body>
 
 </html>

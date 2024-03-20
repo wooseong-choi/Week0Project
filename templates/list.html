@@ -5,13 +5,10 @@
         <title>Jungle Books</title>
         
         <style>
-            * {
-            font-family: 'Jua', sans-serif;
-        }
 
         .wrap {
             margin: auto;
-            width: 1000px;
+            width: 1200px;
         }
 
         /* .title {
@@ -25,7 +22,7 @@
 
         .posting-box {
             margin: 10px auto 30px auto;
-            width: 500px;
+            width: 700px;
             border: 3px solid black;
             border-radius: 5px;
             padding: 25px;
@@ -34,10 +31,10 @@
                 text-align: center;
             }
 
-            .book-list {
+            /* .book-list {
                 width: 500px;
                 margin: 20px auto 0 auto;
-            }
+            } */
 
             .book-name {
                 display: inline-block;
@@ -47,15 +44,21 @@
                 text-decoration: underline;
             }
 
-            #book-box {
+            /* #book-box {
                 width: 800px;
-            }
+            } */
+
+
             .card {
-                /* margin-bottom: 35px; */
-                width: 25rem;
+                width: 370px;
                 display: inline-block;
-                
-                margin: 10px 10px 10px 10px;
+                margin: 10px;
+                vertical-align: top;
+            }
+
+            .card-content {
+                height: 250px;
+
             }
 
             .sorter-box {
@@ -126,7 +129,7 @@
     </head>
     <body>
         
-        <div class ="wrap">
+    <div class ="wrap">
         <div class="book-column" id="book-box">
             {% for item in all_books %}
             <div class = "card">
