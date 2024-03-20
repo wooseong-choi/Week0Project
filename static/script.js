@@ -52,9 +52,9 @@ function sign_in() {
         success: function (response) {
             if (response['result'] == 'success') {
                 $.cookie('mytoken', response['token'], {path: '/'});
-                window.location.replace("/")
+                window.location.replace("/");
             } else {
-                alert(response['msg'])
+                alert(response['msg']);
             }
         }
     });
