@@ -80,27 +80,46 @@
   
   <div class="wrap">
     <section class="section">
-      <h1 class="title">도서등록 페이지입니다.</h1>
+      <h1 class="title has-text-centered">도서등록 페이지입니다.</h1>
     </section>
     <div class="jumbotron">
-      <div class = register>
+      <!-- <div class = register>
         <p>도서등록</p>
-      </div>
+      </div> -->
       <form>
-        <div>
-          <input type="file" id="input-image" name="chooseFile" accept="image/*">
+        책 표지 사진
+        <div class="file has-name is-small is-normal">
+          <label class="file-label">
+            <input class="file-input" type="file" name="resume">
+            <span class="file-cta">
+              <span class="file-icon">
+                <i class="fas fa-upload"></i>
+              </span>
+              <span class="file-label">
+                파일을 선택해주세요
+              </span>
+            </span>
+            <span class="file-name">
+             
+            </span>
+
+          </label>
         </div>
+        <!-- <div>
+          <input type="file" id="input-image" name="chooseFile" accept="image/*">
+        </div> -->
         <br>
         <div class="control">
           제목<input class="input is-hovered" type="text" placeholder="책 제목을 입력하세요">
         </div>
         <br>
         <div>
-          내용 <textarea class="textarea" placeholder="책의 내용을 간단히 소개하세요" rows="10"></textarea>
+          내용 <textarea class="textarea" placeholder="책의 내용을 간단히 소개해주세요" rows="10"></textarea>
         </div>
         <br>
         <div> 
-          <button id="save-alert" type="submit" class="btn btn-primary" onclick="postBooks()">등록하기</button>
+          <button class="button is-primary is-light" type="submit" onclick="postBooks()">등록하기</button>
+          
         </div>
       </form>
     </div>
