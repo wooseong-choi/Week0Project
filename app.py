@@ -26,10 +26,8 @@ def home():
 
 @app.route('/books/list', methods=['GET'])
 def show_books():
-   all_books = list(db.book.find({},{"_id" : False}).sort("like", -1))
-   # 2. 성공하면 success 메시지와 함께 all_books 목록을 클라이언트에 전달합니다.
-   return render_template('load.html')
-# jsonify({"result" : "success", "all_books" : all_books})
+    all_books = list(db.book.find({}, {'_id': False}))
+    return jsonify({'result': 'success', 'all_books': all_books})
 
 @app.route('/books/upload', methods=['POST'])
 def upload_books():
@@ -43,6 +41,31 @@ def upload_books():
     db.book.insert_one(book)
     
     return jsonify({'result': 'success'})
+
+@app.route('/books/upload', methods=['POST'])
+def posting():
+    title_receive = request.form["title_give"]
+    text_receive = request.form["text_give"]
+    image = request.files["image_give"]
+    # static 폴더에 저장될 파일 이름 생성하기 
+    today = datetime.now()
+    mytime = today.strftime('%Y-%m-%d-%H-%M-%S')
+    filename = f'image-{mytime}'
+    # 확장자 나누기
+    extension = image.filename.split('.')[-1]
+    # static 폴더에 저장
+    save_to = f'static/{filename}.{extension}'
+    image.save(save_to)
+
+    # DB에 저장
+    doc = {
+        'title': title_receive,
+        'text': text_receive,
+        'image': f'{filename}.{extension}'
+    }
+    db.book.insert_one(doc)
+
+    return jsonify({'msg': '업로드 완료!'})
 
 @app.route('/mypage/<userId>', methods=['GET'])
 def mypage(userId):
