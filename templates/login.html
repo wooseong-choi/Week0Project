@@ -6,20 +6,32 @@
     <style>
         .oustset input[type="user_id"],
         .oustset input[type="password"] {
-            color: black;
+            color:darkblue;
             border-radius: 50px;
             position: center;
 
-            background-color:beige;
+
+            background-color:white;
+            border-color: white;
+
+            margin-bottom: 200px;
+            margin: 20px;
+
         }
         .oustset form {
-            background-color: aquamarine;
+            background-color:rgb(81, 202, 186);
             position: center;
         }
         input {
-            color :forestgreen;
-            position: center;
+            font-size: 17px;
+            color :white;
+            margin: 10px;
+            text-align: center;
         }
+        ::placeholder {
+    text-align: center;
+}
+
     </style>
 </head>
 <script>
@@ -61,9 +73,9 @@
 </script>
 <body>
 
-    <div class="oustset">
+    <div class="oustset" style="text-align: center;">
         <form action="/login" method="POST">
-            <input type="user_id" required name="user_id" placeholder="user_id"> <br><br>
+            <input type="user_id"  required name="user_id" placeholder="user_id"> <br><br>
             <input type="password" required name="password" placeholder="Password"> <br><br>
 
         </form>
