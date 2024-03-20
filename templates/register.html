@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    {% include 'non_login_header.html' %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register</title>
@@ -8,7 +9,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
     <style>
-        
+/*         
         .on {
             background-color: rgb(81, 202, 186);
 
@@ -35,8 +36,15 @@
         button {
             font-size: 17px;
 
+        } */
+        .container {
+            margin: auto;
+            width: 350px;
         }
-
+        .is-hovered:hover{
+            background-color:#e7fbfe ;
+        }
+        
     </style>
 
 </head>
@@ -157,7 +165,7 @@
 
 <body>
 
-    <div class="on">
+    <!-- <div class="on">
         <div class="find-btn">
             <input id="input-username" style="border-radius: 50px; width:200px;height: 25px; border-color:rgb(81, 202, 186);" class="form-control" placeholder="User_id"></div>
 
@@ -184,8 +192,63 @@
             <button type="button" style="border-radius: 50px; width:100px;height: 50px; background-color: rgb(81, 202, 186); border-color: rgb(81, 202, 186); color: white" class="btn btn-primary btn-oval" onclick="register()">완료</button>
         </div>
 
+    </div> -->
+
+
+<div class ="container">
+    <div class="field">
+    <p class="control has-icons-left has-icons-right">
+        <input class="input is-hovered" id="input-username" type="email" placeholder="ID">
+        <span class="icon is-small is-left">
+        <i class="far fa-user-circle"></i>
+        </span>
+    </p>
     </div>
-
-
+    <div class="field">
+        <p style="text-align: right;" class="control">
+        <button class="button is-success is-small is-outlined" onclick="checkDuplicate()">
+            중복확인
+        </button>
+        </p>
+    </div>
+    <div class="field">
+    <p class="control has-icons-left">
+        <input class="input is-hovered" id="input-nickname" placeholder="Name">
+        <span class="icon is-small is-left">
+        <i class="fa fa-male"></i>
+        </span>
+    </p>
+    </div>
+    <div class="field">
+        <p class="control has-icons-left">
+        <input class="input is-hovered" type="password" id="input-password" placeholder="Password">
+        <span class="icon is-small is-left">
+            <i class="fas fa-lock"></i>
+        </span>
+        </p>
+    </div>
+    <div class="field">
+        <p class="control has-icons-left">
+        <input class="input is-hovered" type="password" id="input-password2" placeholder="Password Check">
+        <span class="icon is-small is-left">
+            <i class="fas fa-lock"></i>
+        </span>
+        </p>
+    </div>
+    <div class="field">
+        <p style="text-align: right;" class="control">
+        <button class="button is-success is-small is-outlined" onclick="checkpass()">
+            비밀번호 확인
+        </button>
+        </p>
+    </div>
+    <div class="field">
+        <p style="text-align: center;" class="control">
+        <button class="button is-success is-small is-right is-outlined" onclick="register()">
+            완료
+        </button>
+        </p>
+    </div>
+</div>
 </body>
 </html>
