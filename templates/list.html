@@ -1,12 +1,9 @@
 <!DOCTYPE html>
 <html lang="ko">
     <head>
-        <meta charset="UTF-8"/>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        {% include 'header.html' %}
         <title>Jungle Books</title>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css"/>
-        <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+        
         <style>
             .center {
                 text-align: center;
@@ -103,19 +100,6 @@
         </script>
     </head>
     <body>
-        <section class="hero is-info">
-            <div class="hero-body">
-                <div class="container center">
-                    <h1 class="title">
-                        Jungle Books 📖
-                    </h1>
-                    <p></p>
-                    <h2 class="subtitle">
-                        정보 공유의 즐거움
-                    </h2>
-                </div>
-            </div>
-        </section>
         <div class="book-column" id="book-box">
             {% for item in all_books %}
             <div class = "card">
@@ -136,7 +120,7 @@
                     </div>
                 </div>
                 <footer class="card-footer">
-                    <a href="#" class="card-footer-item">대여하기</a>    
+                    <a href="#" class="card-footer-item">대여하기</a>
                 </footer>
             </div>
             {% endfor %}

@@ -34,7 +34,7 @@ def home():
    if not session.get('logged_in'):
       return render_template('login.html')
    else:
-      return render_template('list.html')
+      return redirect('/books/list')
    
    # db.users.insert_one({'id':'asd','password':'123','name':'asd'})
    # db.books.insert_one({'book_name':'asd','book_comment':'asd','book_image':'asd','user_row_id':'asd'})
@@ -102,14 +102,11 @@ def mypage():
          rental.append(tempRental)
       
 
-      #print('rental : ' , rental)
-      #print('book : ' , book)
-
       return render_template('mypage.html', name=userId, book=book,rental=rental)
    else  :
       return render_template('mypage.html', error='No user')   
 
-@app.route('/mypage/<userId>/rental', methods=['POST'])
+@app.route('/mypage/rental', methods=['POST'])
 def mypageRental(userId):
    id = request.form['objId']
 
@@ -127,7 +124,7 @@ def mypageRental(userId):
 
    return jsonify({'result': book, 'rental':rental})
 
-@app.route('/mypage/<userId>/bookEdit', methods=['POST'])
+@app.route('/mypage/bookEdit', methods=['POST'])
 def bookEdit(userId):
    id = request.form['objId']
 
@@ -142,7 +139,7 @@ def bookEdit(userId):
   
 
 
-@app.route('/mypage/<userId>/join', methods=['POST'])
+@app.route('/mypage/join', methods=['POST'])
 def join(userId):
    id = request.form['objId']
    result = db.rental.update_one( {'_id':ObjectId(id)}, {'$set': {'rental_status':'수락'} } )
@@ -151,7 +148,7 @@ def join(userId):
       return jsonify({'result': 'success'})
    else:
       return jsonify({'result': 'failure'})    
-@app.route('/mypage/<userId>/reject', methods=['POST'])
+@app.route('/mypage/reject', methods=['POST'])
 def reject(userId):
    id = request.form['objId']
    result = db.rental.update_one( {'_id':ObjectId(id)}, {'$set': {'rental_status':'거절'} } )
