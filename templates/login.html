@@ -27,7 +27,11 @@
         alert("비밀번호를 입력해주세요.");
         $("[name=password]").val();
         return;
-    } 
+    }
+
+    if (user_id == password) {
+        return;
+    }
     $.ajax({
         type: "POST",
         url: "/login",
