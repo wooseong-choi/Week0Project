@@ -25,8 +25,6 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'f1fb0b3154444c53b7aa815e013f7f4f'
 
 #client = MongoClient('localhost', 27017)  # mongoDB는 27017 포트로 돌아갑니다.
-
-client = MongoClient('mongodb://test:test@3.34.182.204', 27017)  # mongoDB는 27017 포트로 돌아갑니다.
 client = MongoClient('mongodb://test:test@43.202.1.195',27017)  # mongoDB는 27017 포트로 돌아갑니다.
 db = client.week0Project                        # 'jungle'라는 이름의 db를 만듭니다.
 
@@ -115,17 +113,17 @@ def mypage():
 
    if len(users) > 0 :
 
-      book = list( db.book.find({'user_id': userId} ) )
+      book = list( db.book.find({'user_id': userId} ).sort('_id', -1) )
 
       rental = []
 
       for tempBook in book :
          #tempRental = list( db.rental.find( {'book_row_id': str(tempBook['_id']) ,'rental_status':'대여 요청' } ) )
-         tempRental = list( db.rental.find( {'book_row_id': str(tempBook['_id'])  } ) )
+         tempRental = list( db.rental.find( {'book_row_id': str(tempBook['_id'])  } ).sort('_id', -1) )
          rental.append(tempRental)
       
 
-      rental_request = list( db.rental.find( { 'take_user_id': userId } ) )
+      rental_request = list( db.rental.find( { 'take_user_id': userId } ).sort('_id', -1) )
 
 
       return render_template('mypage.html', name=userId, book=book,rental=rental, rental_request=rental_request)
