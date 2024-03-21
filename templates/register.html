@@ -9,7 +9,34 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
     <style>
+/*         
+        .on {
+            background-color: rgb(81, 202, 186);
 
+            margin-bottom: 200px;
+            margin: 100px auto;
+
+
+        }
+        .find-btn{
+	        text-align: center;
+            border-radius: 50px;
+            margin: 15px;
+        }
+        input {
+            text-align: center;
+            font-size: 17px;
+        }
+
+        ::placeholder {
+            color:rgb(81, 202, 186);
+            font-size: 17px;
+            text-align: center;
+        }
+        button {
+            font-size: 17px;
+
+        } */
         .container {
             margin: auto;
             width: 350px;
@@ -25,36 +52,50 @@
 <script>
     let duplicateChecked = false;
     let samePass = false;
-    let NoEmpty = false;
 
     function checkDuplicate() {
         let username = $("#input-username").val();  
-        $.ajax({
-            type: "POST",
-            url: "/check_duplicate_username", 
-            data: { username: username },
-            success: function(response) {
 
-                if (response.exists) {
-                    alert("이미 존재하는 아이디입니다.");
-                } else {
-                    duplicateChecked = true;
-                    alert("사용 가능한 아이디입니다.");
+        if( username == '' ){
+            return alert('아이디를 입력해주세요.');
+        }  
+
+            $.ajax({
+                type: "POST",
+                url: "/check_duplicate_username", 
+                data: { username: username },
+                success: function(response) {
+
+                    if (response.exists) {
+                        alert("이미 존재하는 아이디입니다.");
+                    } else {
+                        duplicateChecked = true;
+                        alert("사용 가능한 아이디입니다.");
+                    }
                 }
-            }
-        });
+            });
+
+         
     }
 
     function checkpass() {
         //
-        let password = $("#input-password").val()
-        let password2 = $("#input-password2").val()
+        let password = $("#input-password").val();
+        let password2 = $("#input-password2").val();
+
+        if( password.length == 0 || password == null || password == undefined ){
+            return alert('비밀번호를 입력해주세요.');
+        }
+        
+        if( password2.length == 0 || password2 == null || password2 == undefined ){
+            return alert('비밀번호 확인을 입력해주세요.');
+        }
 
         if (password != password2) 
         {
             alert("비밀번호가 일치하지 않습니다.");
+            return;
         }else{
-            alert("사용가능한 비밀번호 입니다.");
             samePass = true;
         }
 
@@ -62,62 +103,85 @@
 
 
     function register() {
-    let username = $("#input-username").val()
-    let nickname = $("#input-nickname").val()
-    let password = $("#input-password").val()
-    let password2 = $("#input-password2").val()
-    console.log(username, nickname, password, password2)
-  	
-
-    if (username & nickname & password & password2 == "") {
-
-        alert("빈 공백입니다.");
-            return;
-        } else 
-        if (username == "") {
-
-            alert("write your username");
-            return;
-        } else 
-        if (nickname == "") {
-
-            alert("write your nickname");
-            return;
-        } else 
-        if (password & password2 == "") {
-
-            alert("write your password");
-            return;
-        } else 
+        let username = $("#input-username").val();
+        let nickname = $("#input-nickname").val();
+        let password = $("#input-password").val();
+        let password2 = $("#input-password2").val();
+        console.log(username, nickname, password, password2);
         
-        if (!duplicateChecked) {
-            alert("중복 확인을 먼저 해주세요.");
-            return;
-    } else 
-    if (!samePass) {
-        alert("패스워드 불일치.");
-        return;
-    } else {
-        alert("완료");
-    }
 
-    $.ajax({
-        type: "POST",
-        url: "/sign_up/save",
-        data: {
-            username_give: username,
-            password_give: password,
-            nickname_give: nickname
-        },
-        success: function (response) {
-            alert("회원가입을 축하드립니다!")
-            window.location.replace("/")
-        }
-    });
-}
+        
+            if (username == "") {
+
+                alert("아이디를 입력해주세요");
+                return;
+            } 
+            
+            if (!duplicateChecked) {
+                alert("중복 확인을 먼저 해주세요.");
+                return;
+            }  
+            if (nickname == "") {
+
+                alert("닉네임을 입력해주세요");
+                return;
+            }  
+
+            checkpass();
+            
+            if (!samePass) {
+
+                //alert("패스워드 확인해주세요.");
+                return;
+            } 
+
+            $.ajax({
+                type: "POST",
+                url: "/sign_up/save",
+                data: {
+                    username_give: username,
+                    password_give: password,
+                    nickname_give: nickname
+                },
+                success: function (response) {
+                    alert("회원가입을 축하드립니다!")
+                    window.location.replace("/")
+                }
+            });
+    }
 </script>
 
 <body>
+
+    <!-- <div class="on">
+        <div class="find-btn">
+            <input id="input-username" style="border-radius: 50px; width:200px;height: 25px; border-color:rgb(81, 202, 186);" class="form-control" placeholder="User_id"></div>
+
+        <div class="find-btn">
+            <button type="button" style="border-radius: 50px; width:100px;height: 50px; background-color: rgb(81, 202, 186); border-color: rgb(81, 202, 186); color: white" class="btn btn-primary btn-oval" onclick="checkDuplicate()">중복 확인</button></div>
+
+
+        <div class="find-btn">
+            <input id="input-nickname" style="border-radius: 50px; width:200px;height: 25px; border-color:rgb(81, 202, 186);" class="form-control" placeholder="Name">
+        </div>
+
+
+        <div class="find-btn">
+            <input type="password" id="input-password" style="border-radius: 50px; width:200px;height: 25px; border-color:rgb(81, 202, 186);" class="form-control" placeholder="Password">
+        </div>
+        <div class="find-btn">
+            <input type="password" id="input-password2" style="border-radius: 50px; width:200px;height: 25px; border-color:rgb(81, 202, 186);" class="form-control" placeholder="Passchck">
+        </div>
+
+        <div class="find-btn">
+            <button type="button" style="border-radius: 50px; width:150px;height: 50px; background-color: rgb(81, 202, 186); border-color: rgb(81, 202, 186); color: white;" class="btn btn-primary btn-oval" onclick="checkpass()">비밀번호 확인</button>
+        </div>
+        <div class="find-btn">
+            <button type="button" style="border-radius: 50px; width:100px;height: 50px; background-color: rgb(81, 202, 186); border-color: rgb(81, 202, 186); color: white" class="btn btn-primary btn-oval" onclick="register()">완료</button>
+        </div>
+
+    </div> -->
+
 
 <div class ="container">
     <div class="field">
@@ -159,7 +223,7 @@
         </span>
         </p>
     </div>
-    <div class="field">
+    <div class="field" style="display: none;">
         <p style="text-align: right;" class="control">
         <button class="button is-success is-small is-outlined" onclick="checkpass()">
             비밀번호 확인
@@ -174,6 +238,5 @@
         </p>
     </div>
 </div>
-
 </body>
 </html>
