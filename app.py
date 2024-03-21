@@ -24,7 +24,7 @@ app = Flask(__name__)
 
 app.config['SECRET_KEY'] = 'f1fb0b3154444c53b7aa815e013f7f4f'
 
-client = MongoClient('localhost', 27017)  # mongoDB는 27017 포트로 돌아갑니다.
+client = MongoClient('127.0.0.1', 27017)  # mongoDB는 27017 포트로 돌아갑니다.
 db = client.week0Project                        # 'jungle'라는 이름의 db를 만듭니다.
 
 @app.route('/')
@@ -313,7 +313,7 @@ def sign_up():
 
 @app.route('/check_duplicate_username', methods=['POST'])
 def check_duplicate_username():
-    username = request.form.get('username')
+    username = request.form['username']
     existing_user = db.users.find_one({'user_id': username})
     return jsonify({'exists': existing_user is not None})
 
