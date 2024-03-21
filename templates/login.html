@@ -47,6 +47,7 @@
                 window.location.replace("/");
             } else {
                 alert(response['msg']);
+                
             }
         }
     });
@@ -55,22 +56,6 @@
 </script>
 <body>
 
-    <!-- <div class="oustset">
-        <form action="/login" method="POST">
-            <input type="user_id"  required name="user_id" placeholder="user_id"> <br><br>
-            <input type="password" required name="password" placeholder="Password"> <br><br>
-
-        </form>
-        <form action="/login" method="POST">
-            <input type="button" required onclick="log_in();" value="Login">
-        </form>    
-
-        <form action="/register" method="POST">
-            <input type="submit" value="Register">
-        </form>
-    
-    </div> -->
-          
 
     <div class ="container">
     
@@ -93,7 +78,7 @@
     </form> <br>
 
     <div class="flex w-full justify-between">
-        <form action="/login" method="POST">
+        
         <div class="field">
             <p class="control">
             <button class="button is-success" required onclick="log_in();" value="Login">
@@ -104,7 +89,6 @@
             </button>
             </p>
         </div>
-        </form>
         <form action="/register" method="POST">
             <input style="width: auto; padding: 0; line-height: 40px;" type="submit" value="Register" class="container has text-right">
         </form>

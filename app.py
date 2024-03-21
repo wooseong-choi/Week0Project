@@ -41,6 +41,9 @@ def home():
 @app.route('/books/list', methods=['GET'])
 def show_books():
 
+   if session['logged_in'] == False : 
+      return redirect('/') 
+
    page = request.args.get('page', 1, type=int)
    limit = 6
    all_books = list(db.book.find({}).sort('_id', -1).skip((page - 1) * limit).limit(limit)  )
@@ -61,6 +64,8 @@ def show_books():
 
 @app.route('/books/upload', methods=['GET'])
 def goUpload():
+   if session['logged_in'] == False : 
+      return redirect('/') 
    return render_template('upload.html')
 
 @app.route('/books/upload', methods=['POST'])
@@ -252,7 +257,7 @@ def updateNotification():
 def logout():
    session['logged_in'] = False
    session.pop('user_id',None)
-   return render_template('login.html') #session.clear(), 
+   return render_template('login.html') 
 
 
 @app.route('/register', methods=['POST'])
