@@ -62,7 +62,7 @@
     <form action="/login" method="POST">
     <div class="field">
         <p class="control has-icons-left has-icons-right">
-          <input class="input" type="user_id" required name="user_id" placeholder="ID">
+          <input class="input" type="text" required name="user_id" placeholder="ID">
           <span class="icon is-small is-left">
             <i class="far fa-user-circle"></i>
         </p>
@@ -78,7 +78,7 @@
     </form> <br>
 
     <div class="flex w-full justify-between">
-        
+        <form action="/login" method="POST">
         <div class="field">
             <p class="control">
             <button class="button is-success" required onclick="log_in();" value="Login">
@@ -89,6 +89,8 @@
             </button>
             </p>
         </div>
+     </form>   
+
         <form action="/register" method="POST">
             <input style="width: auto; padding: 0; line-height: 40px;" type="submit" value="Register" class="container has text-right">
         </form>
