@@ -29,9 +29,8 @@
         return;
     }
 
-    if (user_id != password) {
-        //
-        alert("");
+    if (user_id == password) {
+        return;
     }
     $.ajax({
         type: "POST",
