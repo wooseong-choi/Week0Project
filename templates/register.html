@@ -9,34 +9,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
     <style>
-/*         
-        .on {
-            background-color: rgb(81, 202, 186);
 
-            margin-bottom: 200px;
-            margin: 100px auto;
-
-
-        }
-        .find-btn{
-	        text-align: center;
-            border-radius: 50px;
-            margin: 15px;
-        }
-        input {
-            text-align: center;
-            font-size: 17px;
-        }
-
-        ::placeholder {
-            color:rgb(81, 202, 186);
-            font-size: 17px;
-            text-align: center;
-        }
-        button {
-            font-size: 17px;
-
-        } */
         .container {
             margin: auto;
             width: 350px;
@@ -52,6 +25,7 @@
 <script>
     let duplicateChecked = false;
     let samePass = false;
+    let NoEmpty = false;
 
     function checkDuplicate() {
         let username = $("#input-username").val();  
@@ -86,25 +60,6 @@
 
     }
 
-    function NoEmpty() {
-        let username = $("#input-username").val()
-        let nickname = $("#input-nickname").val()
-        let password = $("#input-password").val()
-        let password2 = $("#input-password2").val()
-
-        if (username & nickname & password & password2 == "") {
-            alert("빈 공백입니다.");
-        } else 
-        if (username == "") {
-            alert("write your username");
-        } else 
-        if (nickname == "") {
-            alert("write your nickname");
-        } else 
-        if (password & password2 == "") {
-            alert("write your password");
-        }
-    }
 
     function register() {
     let username = $("#input-username").val()
@@ -139,9 +94,8 @@
             alert("중복 확인을 먼저 해주세요.");
             return;
     } else 
-    if (samePass) {
-
-        alert("패스워드 확인.");
+    if (!samePass) {
+        alert("패스워드 불일치.");
         return;
     } else {
         alert("완료");
@@ -164,36 +118,6 @@
 </script>
 
 <body>
-
-    <!-- <div class="on">
-        <div class="find-btn">
-            <input id="input-username" style="border-radius: 50px; width:200px;height: 25px; border-color:rgb(81, 202, 186);" class="form-control" placeholder="User_id"></div>
-
-        <div class="find-btn">
-            <button type="button" style="border-radius: 50px; width:100px;height: 50px; background-color: rgb(81, 202, 186); border-color: rgb(81, 202, 186); color: white" class="btn btn-primary btn-oval" onclick="checkDuplicate()">중복 확인</button></div>
-
-
-        <div class="find-btn">
-            <input id="input-nickname" style="border-radius: 50px; width:200px;height: 25px; border-color:rgb(81, 202, 186);" class="form-control" placeholder="Name">
-        </div>
-
-
-        <div class="find-btn">
-            <input type="password" id="input-password" style="border-radius: 50px; width:200px;height: 25px; border-color:rgb(81, 202, 186);" class="form-control" placeholder="Password">
-        </div>
-        <div class="find-btn">
-            <input type="password" id="input-password2" style="border-radius: 50px; width:200px;height: 25px; border-color:rgb(81, 202, 186);" class="form-control" placeholder="Passchck">
-        </div>
-
-        <div class="find-btn">
-            <button type="button" style="border-radius: 50px; width:150px;height: 50px; background-color: rgb(81, 202, 186); border-color: rgb(81, 202, 186); color: white;" class="btn btn-primary btn-oval" onclick="checkpass()">비밀번호 확인</button>
-        </div>
-        <div class="find-btn">
-            <button type="button" style="border-radius: 50px; width:100px;height: 50px; background-color: rgb(81, 202, 186); border-color: rgb(81, 202, 186); color: white" class="btn btn-primary btn-oval" onclick="register()">완료</button>
-        </div>
-
-    </div> -->
-
 
 <div class ="container">
     <div class="field">
@@ -250,5 +174,6 @@
         </p>
     </div>
 </div>
+
 </body>
 </html>
