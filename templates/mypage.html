@@ -99,6 +99,8 @@
 
   function openRentalPop(objId){
     
+    updateNotification(objId);
+
     $('[name=title]').val('');
     $('[name=content]').val('');
     $('[name=bookImg]').attr('src','');
@@ -328,7 +330,7 @@
               </div>
          
               <div class="date">
-                  <time datetime="2016-1-1">등록일:   {{ (item['image'] | replace('image-','') )[0:19]  }}</time>
+                  <time datetime="2016-1-1">등록일:   {{ (item['image'] | replace('image-','') )[0:10]  }}</time>
               </div>
           </div>
           <footer class="card-footer">
@@ -355,11 +357,12 @@
                 </div>
                 
                 <div class="date">
-                    <time datetime="2016-1-1">등록일:   {{ (rTemp['book_image'] | replace('image-','') )[0:19]  }}</time>
+                    <time datetime="2016-1-1">등록일:   {{ (rTemp['book_image'] | replace('image-','') )[0:10]  }}</time>
                 </div>
             </div>
             <footer class="card-footer">
                 <a href="javascript:openRentalPop('{{ rTemp['_id'] }}')" class="card-footer-item" data-modal-target="static-modal" data-modal-toggle="static-modal"  >요청보기</a>
+                <span class="absolute noti {% if  rTemp['notification']  %}noti-active{% endif %}  {{ rTemp['_id'] }}" ></span>
             </footer>
           </div>
           {% endfor %}
@@ -383,7 +386,7 @@
                 </div>
                 
                 <div class="date">
-                    <time datetime="2016-1-1">등록일:   {{ (item['book_image'] | replace('image-','') )[0:19]  }}</time>
+                    <time datetime="2016-1-1">등록일:   {{ (item['book_image'] | replace('image-','') )[0:10]  }}</time>
                 </div>
             </div>
             <footer class="card-footer relative">

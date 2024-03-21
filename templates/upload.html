@@ -2,9 +2,8 @@
 <html lang="en">
 
 <head>
-
   
- 
+  <!-- Bootstrap CSS -->
 
   <!-- JS -->
   <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"
@@ -42,6 +41,10 @@
         .card {
             margin-bottom: 15px;
         }
+
+        .register {
+          margin: auto;
+        }
     </style>
 
 <script>
@@ -56,15 +59,19 @@
     form_data.append("text_give", text)
 
     $.ajax({
-d        data: form_data,
+        type: "POST",
+        url: "/books/upload",
+        // form data 형식으로 파일 데이터 보내기
+        data: form_data,
         cache: false,
         contentType: false,
         processData: false,
         success: function (response) {
             alert(response["msg"]);
             window.location.replace('/books/list');
-        },error:function(){
-            window.location.replace('/books/list');
+        },
+        error: function (error) {
+          window.location.replace('/books/list');
         }
     });
   }
@@ -73,31 +80,35 @@ d        data: form_data,
 </script>
 
 <body>
+  
   <div class="wrap">
+    <section class="section">
+      <h1 class="title has-text-centered">도서등록 페이지입니다.</h1>
+    </section>
     <div class="jumbotron">
-      <h1 class="page-title"> 도서 등록 </h1>
+      <!-- <div class = register>
+        <p>도서등록</p>
+      </div> -->
       <form>
-        
-          <div class="font-[sans-serif] max-w-md mx-auto">
-            <input id="input-image" name="chooseFile" accept=".png, .jpg" type="file"
-              class=" w-full text-black text-sm bg-white border file:cursor-pointer cursor-pointer file:border-0 file:py-2.5 file:px-4 file:bg-gray-100 file:hover:bg-gray-200 file:text-black rounded" />
-            <p class="text-xs text-gray-400 mt-2">PNG, JPG are Allowed.</p>
-          </div>
-        
+        책 표지 사진
         
         <div>
-          <input name="title" id="input-title" placeholder="제목을 입력하세요"></input>
+          <input type="file" id="input-image" name="chooseFile" accept="image/*">
         </div>
+        <br>
+        <div class="control">
+          제목<input class="input is-hovered" id ="input-title" type="text" placeholder="책 제목을 입력하세요">
+        </div>
+        <br>
         <div>
-          <textarea name="text" id="input-text" rows="4" placeholder="내용을 입력하세요"></textarea>
+          내용 <textarea class="textarea" id ="input-text" placeholder="책의 내용을 간단히 소개해주세요" rows="10"></textarea>
         </div>
+        <br>
         <div> 
-          <button id="save-alert" type="button" class="btn btn-primary" onclick="postBooks()">등록하기</button>
+          <button class="button is-primary is-light" type="button" onclick="postBooks()">등록하기</button>
+          
         </div>
       </form>
-    </div>
-    <div id="cards-list" class="card-columns">
-      
     </div>
   </div>
 

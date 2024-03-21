@@ -229,10 +229,13 @@
                         var result = response.result;
                         if(result == 'already'){
                             alert('이미 대여 신청된 도서입니다.');
+                            location.reload();
                         }else if(result == 'success'){
                             alert('대여 신청되었습니다.');
+                            location.reload();
                         }else{
                             alert('대여 신청이 실패했습니다.');
+                            location.reload();
                         }
                     }
                 });
