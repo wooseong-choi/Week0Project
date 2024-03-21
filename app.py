@@ -267,7 +267,7 @@ def register():
    return render_template('register.html') 
 
 
-@app.route('/login', methods=['POST'])
+@app.route('/login', methods=['GET', 'POST'])
 def login():
    username_receive = request.form['user_id']
    password_receive = request.form['password']  # 유저가 아이디 pw 입력
@@ -276,7 +276,7 @@ def login():
    result = db.users.find_one({'user_id': username_receive, 'password': pw_hash}) 
     # 아이디와 유저가 입력한 해쉬화된 pw가 DB에 저장되어 있는 해쉬화된 pw와 일치하는지 확인 
 
-   id_mac = db.users.find_one({'user_id': username_receive})
+   # id_mac = db.users.find_one({'user_id': username_receive})
 
    #  if (username_receive == id_mac):
    #     return None
@@ -326,5 +326,5 @@ def check_duplicate_username():
 
 
 if __name__ == '__main__':  
-   app.run('0.0.0.0',port=5000,debug=True)
+   app.run('0.0.0.0',port=5001,debug=True)
 
